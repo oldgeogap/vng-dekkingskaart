@@ -35,3 +35,7 @@ ipcMain.on("browse-files", async (event, arg) => {
   let result = await dialog.showOpenDialog({ properties: ["openFile", "multiSelections"] });
   event.sender.send("files-selected", result.filePaths);
 });
+
+ipcMain.on("process-test", (event, arg) => {
+  event.sender.send("process-test", { name: "VNG" });
+});

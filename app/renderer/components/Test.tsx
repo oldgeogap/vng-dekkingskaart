@@ -5,6 +5,7 @@ import { IoCheckmarkCircleSharp, IoCloseCircle } from "react-icons/io5";
 import { styled } from "renderer/ui/theme";
 import ClientFSTest from "./fs/ClientFSTest";
 import { MapTest } from "./map/MapTest";
+import { ProcessTest } from "./process/ProcessTest";
 
 export interface TestProps {}
 
@@ -37,21 +38,7 @@ export function Test({}: TestProps) {
         </Action>
 
         <Result>
-          <div>
-            <Button colorScheme="blue" onClick={() => setCheck(true)} isDisabled={processRun}>
-              Process test
-            </Button>
-          </div>
-          {processRun && (
-            <div>
-              {processSuccess ? "Succes" : "Failure"}
-              {processSuccess ? (
-                <IoCheckmarkCircleSharp color="green" size="32px" />
-              ) : (
-                <IoCloseCircle color="red" size="32px" />
-              )}
-            </div>
-          )}
+          <ProcessTest />
         </Result>
       </section>
 
