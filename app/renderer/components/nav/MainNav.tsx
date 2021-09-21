@@ -27,7 +27,7 @@ export function MainNav({}: MainNavProps) {
         </Tab>
         <Tab className={check("upload")}>
           <Link href="/upload">
-            <a>Uploaden</a>
+            <a>Dekkingskaarten</a>
           </Link>
         </Tab>
         <Tab className={check("minicompetitie")}>

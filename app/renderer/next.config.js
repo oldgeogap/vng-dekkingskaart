@@ -1,4 +1,6 @@
-module.exports = {
+const withTM = require("next-transpile-modules")(["dexie"]);
+
+module.exports = withTM({
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.target = "electron-renderer";
@@ -9,4 +11,4 @@ module.exports = {
 
     return config;
   }
-};
+});

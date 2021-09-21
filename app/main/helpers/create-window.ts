@@ -74,7 +74,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     }
   };
   win = new BrowserWindow(browserOptions);
-
+  win.setMenuBarVisibility(false);
   win.on("close", saveState);
 
   return win;
