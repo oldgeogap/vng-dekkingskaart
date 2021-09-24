@@ -1,4 +1,4 @@
-import { Provider } from "./models";
+import { Provider, CoverageType } from "./models";
 
 export const providerFixture: Provider[] = [
   { name: "KPN" },
@@ -8,4 +8,9 @@ export const providerFixture: Provider[] = [
   { name: "Telford" }
 ];
 
-//spraak, data laag, data gemiddeld, data hoog
+export const coverageTypeFixture: CoverageType[] = [
+  { name: "Spraak" },
+  { name: "Data laag" },
+  { name: "Data gemiddeld" },
+  { name: "Data hoog" }
+];

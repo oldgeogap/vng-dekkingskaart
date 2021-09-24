@@ -2,6 +2,8 @@ import { app, ipcMain, dialog } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 
+import "./process";
+
 const isProd: boolean = process.env.NODE_ENV === "production";
 
 if (isProd) {
@@ -29,11 +31,6 @@ if (isProd) {
 
 app.on("window-all-closed", () => {
   app.quit();
-});
-
-ipcMain.on("browse-files", async (event, arg) => {
-  let result = await dialog.showOpenDialog({ properties: ["openFile", "multiSelections"] });
-  event.sender.send("files-selected", result.filePaths);
 });
 
 ipcMain.on("process-test", (event, arg) => {

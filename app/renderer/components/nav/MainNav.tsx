@@ -25,8 +25,8 @@ export function MainNav({}: MainNavProps) {
             <a>Test</a>
           </Link>
         </Tab>
-        <Tab className={check("upload")}>
-          <Link href="/upload">
+        <Tab className={check("coverage")}>
+          <Link href="/coverage">
             <a>Dekkingskaarten</a>
           </Link>
         </Tab>
@@ -47,9 +47,9 @@ export function MainNav({}: MainNavProps) {
         </Tab>
       </Tabs>
       <SideNav>
-        <Link href="/instellingen">
+        {/* <Link href="/instellingen">
           <IconButton aria-label="Instellingen" icon={<IoSettingsOutline />} size="sm" isRound variant="ghost" />
-        </Link>
+        </Link> */}
       </SideNav>
     </NavContainer>
   );

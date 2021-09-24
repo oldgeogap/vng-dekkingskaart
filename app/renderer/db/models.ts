@@ -3,14 +3,21 @@ export interface Provider {
   name: string;
 }
 
-export interface DataType {
+export interface CoverageType {
   id?: number;
   name: string;
 }
 
-export interface DataFile {
+export type CoverageFileStatus = "working" | "done" | "error";
+
+export interface CoverageFile {
   id?: number;
-  filename: string;
-  data_type: string;
-  year: number;
+  provider: number;
+  coverage_type: number;
+  year: string;
+  created_at: number;
+  status: CoverageFileStatus;
+  importPaths?: string;
+  path?: string;
+  error?: string | null;
 }

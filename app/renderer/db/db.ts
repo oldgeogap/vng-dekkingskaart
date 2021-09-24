@@ -1,11 +1,11 @@
 import Dexie, { Table } from "dexie";
-import { Provider, DataType, DataFile } from "./models";
-import { providerFixture } from "./fixtures";
+import { Provider, CoverageType, CoverageFile } from "./models";
+import { providerFixture, coverageTypeFixture } from "./fixtures";
 
 class VngDB extends Dexie {
   public provider: Table<Provider>;
-  public datatype: Table<DataType>;
-  public datafile: Table<DataFile>;
+  public coveragetype: Table<CoverageType>;
+  public coveragefile: Table<CoverageFile>;
 
   private static VERSION = 1;
 
@@ -14,12 +14,13 @@ class VngDB extends Dexie {
 
     this.version(VngDB.VERSION).stores({
       provider: "++id, &name",
-      datatype: "++id, &name",
-      datafiles: "++id, filename, data_type"
+      coveragetype: "++id, &name",
+      coveragefile: "++id, provider, year, status, coverage_type"
     });
 
     this.on("populate", () => {
       this.provider.bulkAdd(providerFixture, { allKeys: true });
+      this.coveragetype.bulkAdd(coverageTypeFixture, { allKeys: true });
     });
   }
 }
