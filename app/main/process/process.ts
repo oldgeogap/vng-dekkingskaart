@@ -1,18 +1,27 @@
 import { ipcMain, dialog } from "electron";
 import { ipcEvents } from "../../shared";
-import { processKML } from "./kml";
+import { processKML, processGeoJSON } from "./processors";
+
 import { app } from "electron";
 
-import os from "os";
 import fs from "fs-extra";
 import path from "path";
-
-let bla = getTargetPath("test.geojson");
-console.log("BLA", bla);
 
 ipcMain.on(ipcEvents.BROWSE_FILES, async (event, arg) => {
   let result = await dialog.showOpenDialog({ properties: ["openFile"] });
   event.sender.send(ipcEvents.BROWSE_FILES_RESULT, result.filePaths);
+});
+
+ipcMain.on(ipcEvents.DELETE_FILE, async (event, arg) => {
+  let targetFile: string = arg.path;
+  console.log("Deleting ", targetFile, "...");
+  if (targetFile.startsWith(getCoveragePath())) {
+    await fs.remove(targetFile);
+    event.sender.send(ipcEvents.DELETE_FILE_RESULT, { success: true, result: targetFile });
+  } else {
+    event.sender.send(ipcEvents.DELETE_FILE_RESULT, { success: false, error: `Niet toegestaan voor "${targetFile}"` });
+  }
+  //
 });
 
 ipcMain.on(ipcEvents.PROCESS_FILES, async (event, arg) => {
@@ -40,7 +49,7 @@ async function processFiles(paths: string[], targetName: string) {
         return await processKML(path, getTargetPath(targetName));
       case "json":
       case "geojson":
-        return await processGeoJSON(path);
+        return await processGeoJSON(path, getTargetPath(targetName));
       case "zip":
         throw new Error("shapefile not supported yet");
       default:
@@ -51,14 +60,14 @@ async function processFiles(paths: string[], targetName: string) {
   }
 }
 
-async function processGeoJSON(path: string) {
-  console.log(path);
-  return "path to geojson";
-}
-
-function getTargetPath(name: string) {
+function getCoveragePath() {
   const appDir = app.getPath("userData");
   const coveragePath = path.join(appDir, "dekkingskaarten");
   fs.ensureDirSync(coveragePath);
+  return coveragePath;
+}
+
+function getTargetPath(name: string) {
+  const coveragePath = getCoveragePath();
   return path.join(coveragePath, `${name}.geojson`);
 }

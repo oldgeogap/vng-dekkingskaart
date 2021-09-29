@@ -3,7 +3,7 @@ import { db } from "../../db";
 import { Option } from ".";
 
 export function useProviderOptions() {
-  const [providerOptions, setProviderOptions] = React.useState([]);
+  const [providerOptions, setProviderOptions] = React.useState<Option[]>([]);
 
   React.useEffect(() => {
     const doFetch = async () => {

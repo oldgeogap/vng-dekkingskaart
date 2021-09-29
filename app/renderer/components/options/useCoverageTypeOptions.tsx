@@ -6,7 +6,7 @@ export function useCoverageTypeOptions() {
   const [coverageTypes, setcoverageTypes] = React.useState<Option[]>([]);
   React.useEffect(() => {
     const doFetch = async () => {
-      let result = await db.coveragetype.toCollection().reverse().sortBy("name");
+      let result = await db.coveragetype.toCollection().reverse().sortBy("id");
       setcoverageTypes(result.map((r) => ({ id: r.id, name: r.name })));
     };
     doFetch();

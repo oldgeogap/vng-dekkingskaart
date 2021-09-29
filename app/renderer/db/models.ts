@@ -21,3 +21,13 @@ export interface CoverageFile {
   path?: string;
   error?: string | null;
 }
+
+export interface Municipality {
+  id: string;
+  name: string;
+}
+
+export interface AppState {
+  id?: number;
+  municipalitySelection: Municipality[];
+}

@@ -1,4 +1,4 @@
-import { Provider, CoverageType } from "./models";
+import { Provider, CoverageType, AppState } from "./models";
 
 export const providerFixture: Provider[] = [
   { name: "KPN" },
@@ -14,3 +14,5 @@ export const coverageTypeFixture: CoverageType[] = [
   { name: "Data gemiddeld" },
   { name: "Data hoog" }
 ];
+
+export const appStateFixture: AppState[] = [{ id: 1, municipalitySelection: [] }];

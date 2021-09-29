@@ -15,8 +15,8 @@ export function MapTest({}: MapTestProps) {
     <Map
       style="mapbox://styles/mapbox/streets-v9"
       containerStyle={{
-        width: "480px",
-        height: "320px"
+        width: "100%",
+        height: "100%"
       }}
       center={TEST_COORDS}
     >
