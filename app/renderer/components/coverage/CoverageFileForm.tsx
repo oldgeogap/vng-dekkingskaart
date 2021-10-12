@@ -188,7 +188,7 @@ export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProp
           <Button variant="outline" mr={3} onClick={onCancel}>
             Annuleren
           </Button>
-          <Button colorScheme="brand" onClick={handleSubmit(onSubmit)}>
+          <Button colorScheme="brand" onClick={handleSubmit(onSubmit)} isLoading={startProcessing !== null}>
             {isUpdate ? "Opslaan" : "Bestand toevoegen"}
           </Button>
         </DrawerFooter>

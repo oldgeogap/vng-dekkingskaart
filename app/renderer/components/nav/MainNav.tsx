@@ -22,11 +22,6 @@ export function MainNav({}: MainNavProps) {
       <Tabs>
         <Tab className={check("home")}>
           <Link href="/home">
-            <a>Test</a>
-          </Link>
-        </Tab>
-        <Tab className={check("coverage")}>
-          <Link href="/coverage">
             <a>Dekkingskaarten</a>
           </Link>
         </Tab>
@@ -58,7 +53,8 @@ export function MainNav({}: MainNavProps) {
 const NavContainer = styled.nav`
   grid-area: nav;
   background-color: #fff;
-  border-bottom: 1px solid ${(props) => props.theme.colors.bg[100]};
+  background-color: ${(props) => props.theme.colors.bg[800]};
+  border-bottom: 1px solid ${(props) => props.theme.colors.brand[800]};
   display: flex;
   align-items: stretch;
   justify-content: space-between;
@@ -85,18 +81,19 @@ const Tab = styled.li`
   margin-bottom: -1px;
   display: flex;
   align-items: center;
-  margin-right: 16px;
-  border-bottom: 1px solid ${(props) => props.theme.colors.bg[100]};
+
+  border-top: 2px solid ${(props) => props.theme.colors.brand[900]};
+  padding: 0 8px;
   &:hover {
-    border-bottom: 1px solid ${(props) => props.theme.colors.bg[200]};
+    border-top: 2px solid ${(props) => props.theme.colors.bg[200]};
     a {
-      color: #000;
+      color: #fff;
     }
   }
   &.active {
-    border-bottom: 1px solid black;
+    border-top: 2px solid ${(props) => props.theme.colors.brand[400]};
     a {
-      color: #000;
+      color: ${(props) => props.theme.colors.brand[400]};
     }
   }
 
@@ -104,7 +101,7 @@ const Tab = styled.li`
     text-transform: uppercase;
     font-weight: bold;
     font-size: 12px;
-    color: ${(props) => props.theme.colors.bg[500]};
+    color: ${(props) => props.theme.colors.bg[300]};
   }
 `;
 

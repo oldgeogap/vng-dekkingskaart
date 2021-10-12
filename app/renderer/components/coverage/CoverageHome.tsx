@@ -10,6 +10,7 @@ import { useApp } from "../provider/AppProvider";
 import { Table, SortHeader } from "renderer/ui/table";
 
 import { CoverageFileFilterForm } from "./CoverageFileFilterForm";
+import { WorkerTest } from "renderer/worker/WorkerTest";
 
 export interface CoverageHomeProps {}
 let n = 0;

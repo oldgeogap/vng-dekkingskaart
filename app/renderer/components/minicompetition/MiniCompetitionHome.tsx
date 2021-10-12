@@ -1,19 +1,28 @@
 import * as React from "react";
 import { styled } from "renderer/ui/theme";
+import { CoverageFileLayers } from "../coverage/CoverageFileLayer";
+import { CoverageSelection } from "../coverage/CoverageSelection";
 import { MapRenderer } from "../map/MapRenderer";
 import { MapTest } from "../map/MapTest";
 import { MunicipalityLayer } from "../municipality/MunicipalityLayer";
 import { MunicipalitySelection } from "../municipality/MunicipalitySelection";
+import { MiniCompetitionControl } from "./MiniCompetitionControl";
 
 export interface MiniCompetitionHomeProps {}
 
 export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
+  const [coverageFileVisible, setCoverageFileVisible] = React.useState<number[]>([]);
+
   return (
     <MiniCompetitionHomeContainer>
       <Municipalities>
         <MunicipalitySelection />
       </Municipalities>
-      <CoverageMaps>Dekkingskaarten</CoverageMaps>
+      <CoverageMaps>
+        <CoverageSelection coverageFileVisible={coverageFileVisible} setCoverageFileVisible={setCoverageFileVisible} />
+      </CoverageMaps>
+      <MiniCompetitionControl />
+
       <MapContainer>
         <MapRenderer
           fitBounds={[
@@ -22,6 +31,7 @@ export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
           ]}
         >
           <MunicipalityLayer />
+          <CoverageFileLayers visibleIDS={coverageFileVisible} />
         </MapRenderer>
       </MapContainer>
     </MiniCompetitionHomeContainer>
@@ -30,11 +40,16 @@ export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
 
 const MiniCompetitionHomeContainer = styled.div`
   flex: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr;
+  grid-template-rows: 7fr 1fr;
+  grid-template-areas:
+    "muni cov map"
+    "control control map";
 `;
 
 const Municipalities = styled.section`
-  flex: 0 0 20%;
+  grid-area: muni;
   border-right: 1px solid ${(props) => props.theme.colors.bg[100]};
 
   display: flex;
@@ -43,10 +58,11 @@ const Municipalities = styled.section`
 `;
 
 const CoverageMaps = styled.section`
-  flex: 0 0 20%;
+  grid-area: cov;
   border-right: 1px solid ${(props) => props.theme.colors.bg[100]};
 `;
 
 const MapContainer = styled.section`
-  flex: 1 1 auto;
+  grid-area: map;
+  overflow: hidden;
 `;

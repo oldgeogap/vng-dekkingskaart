@@ -54,10 +54,10 @@ export function MunicipalityLayer({}: MunicipalityLayerProps) {
           ["boolean", ["feature-state", "hover"], false],
           "#00a1e6",
           ["boolean", ["feature-state", "active"], false],
-          "red",
+          "#2ffed5",
           "transparent"
         ],
-        "fill-opacity": 0.4
+        "fill-opacity": 0.8
       }}
       fillOnMouseMove={(e: any) => {
         if (_hoverStateId) {

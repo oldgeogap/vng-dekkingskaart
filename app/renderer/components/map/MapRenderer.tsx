@@ -22,6 +22,9 @@ export function MapRenderer({ fitBounds, children }: MapRendererProps) {
         height: "100%"
       }}
       fitBounds={fitBounds}
+      fitBoundsOptions={{
+        padding: 20
+      }}
     >
       {children}
       <ScaleControl />

@@ -8,12 +8,16 @@ export interface IAppProviderContext {
   loaded: boolean;
   providerOptions: Option[];
   coverageTypeOptions: Option[];
+  providerName: (id: number) => string;
+  coverageTypeName: (id: number) => string;
 }
 
 const defaultContext: IAppProviderContext = {
   loaded: false,
   providerOptions: [],
-  coverageTypeOptions: []
+  coverageTypeOptions: [],
+  providerName: (id: number) => "",
+  coverageTypeName: (id: number) => ""
 };
 
 export const AppProviderContext = React.createContext<IAppProviderContext>(defaultContext);
@@ -33,19 +37,30 @@ export function AppProvider({ children }: AppProviderProps) {
     }
   }, [providerOptions, coverageTypeOptions]);
 
-  if (!loaded)
+  if (!loaded) {
     return (
       <Box p="64px">
         <Spinner />
       </Box>
     );
+  }
+
+  const providerName = (id: number) => {
+    return providerOptions.find((option) => option.id == id)?.name || "";
+  };
+
+  const coverageTypeName = (id: number) => {
+    return coverageTypeOptions.find((option) => option.id == id)?.name || "";
+  };
 
   return (
     <AppProviderContext.Provider
       value={{
         loaded,
         providerOptions,
-        coverageTypeOptions
+        coverageTypeOptions,
+        providerName,
+        coverageTypeName
       }}
     >
       <AppStateProvider>{children}</AppStateProvider>

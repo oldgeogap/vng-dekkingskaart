@@ -1,6 +1,7 @@
 export interface Provider {
   id?: number;
   name: string;
+  color: string;
 }
 
 export interface CoverageType {
@@ -30,4 +31,5 @@ export interface Municipality {
 export interface AppState {
   id?: number;
   municipalitySelection: Municipality[];
+  coverageFileSelection: CoverageFile[];
 }
