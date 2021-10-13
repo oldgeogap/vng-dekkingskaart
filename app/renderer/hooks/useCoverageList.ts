@@ -22,7 +22,6 @@ export function useCoverageList({}: UseCoverageListParams): UseCoverageListRetur
   const [searchKey, setSearchKey] = React.useState<string>("");
 
   const fuse = React.useMemo(() => {
-    console.log(initial);
     return new Fuse(initial, fuseOptions);
   }, [initial]);
 

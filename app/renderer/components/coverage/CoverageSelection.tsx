@@ -18,7 +18,6 @@ export function CoverageSelection({ coverageFileVisible, setCoverageFileVisible 
   const { coverageSelection, coverageSelect, coverageDeselect } = useAppState();
   const { coverageFiles, searchKey, setSearchKey } = useCoverageList({});
 
-  console.log(coverageSelection);
   const selectedIDS = React.useMemo(() => coverageSelection.map((m) => m.id), [coverageSelection]);
   const isSelected = (id: number) => selectedIDS.includes(id);
 

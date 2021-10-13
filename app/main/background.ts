@@ -23,7 +23,7 @@ if (isProd) {
   });
 
   const workerWindow = createWindow("worker", {
-    //show: false, // <--- Comment me out to debug the worker window
+    show: false, // <--- Comment me out to debug the worker window
     webPreferences: { nodeIntegration: true }
   });
 
@@ -54,7 +54,7 @@ if (isProd) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     mainWindow.webContents.openDevTools();
-    workerWindow.webContents.openDevTools();
+    //workerWindow.webContents.openDevTools();
 
     await workerWindow.loadURL(`http://localhost:${port}/worker`);
   }

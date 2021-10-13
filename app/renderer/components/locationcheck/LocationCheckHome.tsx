@@ -2,27 +2,38 @@ import * as React from "react";
 import { styled } from "renderer/ui/theme";
 import { CoverageFileLayers } from "../coverage/CoverageFileLayer";
 import { CoverageSelection } from "../coverage/CoverageSelection";
+import { DragPoint } from "../map/DragPoint";
+import { MapControlDragPoint } from "../map/MapControlDragPoint";
 import { MapRenderer } from "../map/MapRenderer";
-import { MapTest } from "../map/MapTest";
-import { MunicipalityLayer } from "../municipality/MunicipalityLayer";
-import { MunicipalitySelection } from "../municipality/MunicipalitySelection";
-import { MiniCompetitionControl } from "./MiniCompetitionControl";
+import { LocationCheckMapControls } from "./LocationCheckMapControls";
+import { LocationCheckProvider, useLocationCheck } from "./LocationCheckProvider";
+import { LocationSelection } from "./LocationSelection";
 
-export interface MiniCompetitionHomeProps {}
+export interface LocationCheckHomeProps {}
 
-export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
+export type LocationPoint = {
+  x: number;
+  y: number;
+};
+
+export function LocationCheckHome() {
+  return (
+    <LocationCheckProvider>
+      <LocationCheckHomeInner />
+    </LocationCheckProvider>
+  );
+}
+
+export function LocationCheckHomeInner({}: LocationCheckHomeProps) {
   const [coverageFileVisible, setCoverageFileVisible] = React.useState<number[]>([]);
 
   return (
-    <MiniCompetitionHomeContainer>
-      <Municipalities>
-        <MunicipalitySelection />
-      </Municipalities>
+    <LocationCheckHomeContainer>
+      <LocationSelection />
       <CoverageMaps>
         <CoverageSelection coverageFileVisible={coverageFileVisible} setCoverageFileVisible={setCoverageFileVisible} />
       </CoverageMaps>
-      <MiniCompetitionControl />
-
+      <Control>control</Control>
       <MapContainer>
         <MapRenderer
           fitBounds={[
@@ -30,31 +41,22 @@ export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
             [8.007755687486053, 53.65674661767193]
           ]}
         >
-          <MunicipalityLayer />
+          <LocationCheckMapControls />
           <CoverageFileLayers visibleIDS={coverageFileVisible} />
         </MapRenderer>
       </MapContainer>
-    </MiniCompetitionHomeContainer>
+    </LocationCheckHomeContainer>
   );
 }
 
-const MiniCompetitionHomeContainer = styled.div`
+const LocationCheckHomeContainer = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr 3fr;
   grid-template-rows: 9fr 1fr;
   grid-template-areas:
-    "muni cov map"
+    "locs cov map"
     "control control map";
-`;
-
-const Municipalities = styled.section`
-  grid-area: muni;
-  border-right: 1px solid ${(props) => props.theme.colors.bg[100]};
-
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
 `;
 
 const CoverageMaps = styled.section`
@@ -65,4 +67,9 @@ const CoverageMaps = styled.section`
 const MapContainer = styled.section`
   grid-area: map;
   overflow: hidden;
+`;
+
+const Control = styled.div`
+  grid-area: control;
+  background-color: red;
 `;
