@@ -85,6 +85,7 @@ export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProp
         year: data.year
       });
       console.log("Update success?", success);
+      onClose();
     }
   };
 

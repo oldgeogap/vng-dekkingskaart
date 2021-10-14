@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { VscAdd, VscClose } from "react-icons/vsc";
 import { styled } from "renderer/ui/theme";
 import { useLocationCheck } from "./LocationCheckProvider";
-import { LocationPoint } from "./LocationSelection";
+import { LocationPoint } from "./LocationCheckProvider";
 
 export interface LocationPointFormProps {}
 

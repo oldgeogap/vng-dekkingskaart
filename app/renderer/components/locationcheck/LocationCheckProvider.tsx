@@ -7,6 +7,7 @@ export interface LocationCheckProviderProps {
 export type LocationPoint = {
   x: number;
   y: number;
+  hasCoverage?: boolean;
 };
 
 export interface ILocationCheckContext {

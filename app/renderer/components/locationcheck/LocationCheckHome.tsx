@@ -2,19 +2,14 @@ import * as React from "react";
 import { styled } from "renderer/ui/theme";
 import { CoverageFileLayers } from "../coverage/CoverageFileLayer";
 import { CoverageSelection } from "../coverage/CoverageSelection";
-import { DragPoint } from "../map/DragPoint";
-import { MapControlDragPoint } from "../map/MapControlDragPoint";
 import { MapRenderer } from "../map/MapRenderer";
+import { LocationCheckControl } from "./LocationCheckControl";
+import { LocationCheckLayer } from "./LocationCheckLayer";
 import { LocationCheckMapControls } from "./LocationCheckMapControls";
 import { LocationCheckProvider, useLocationCheck } from "./LocationCheckProvider";
 import { LocationSelection } from "./LocationSelection";
 
 export interface LocationCheckHomeProps {}
-
-export type LocationPoint = {
-  x: number;
-  y: number;
-};
 
 export function LocationCheckHome() {
   return (
@@ -33,7 +28,7 @@ export function LocationCheckHomeInner({}: LocationCheckHomeProps) {
       <CoverageMaps>
         <CoverageSelection coverageFileVisible={coverageFileVisible} setCoverageFileVisible={setCoverageFileVisible} />
       </CoverageMaps>
-      <Control>control</Control>
+      <LocationCheckControl />
       <MapContainer>
         <MapRenderer
           fitBounds={[
@@ -41,6 +36,7 @@ export function LocationCheckHomeInner({}: LocationCheckHomeProps) {
             [8.007755687486053, 53.65674661767193]
           ]}
         >
+          <LocationCheckLayer />
           <LocationCheckMapControls />
           <CoverageFileLayers visibleIDS={coverageFileVisible} />
         </MapRenderer>
@@ -67,9 +63,4 @@ const CoverageMaps = styled.section`
 const MapContainer = styled.section`
   grid-area: map;
   overflow: hidden;
-`;
-
-const Control = styled.div`
-  grid-area: control;
-  background-color: red;
 `;

@@ -48,6 +48,36 @@ export function DragPoint({ onDragEnd }: DragPointProps) {
       map.off("touchmove", onMove);
     };
 
+    const onMouseEnter = () => {
+      map.setPaintProperty(_LAYER_ID, "circle-color", "#3bb2d0");
+      canvas.style.cursor = "move";
+    };
+
+    const onMouseLeave = () => {
+      map.setPaintProperty(_LAYER_ID, "circle-color", "#3887be");
+      canvas.style.cursor = "";
+    };
+
+    const onMouseDown = (e) => {
+      // Prevent the default map drag behavior.
+      e.preventDefault();
+
+      canvas.style.cursor = "grab";
+
+      map.on("mousemove", onMove);
+      map.once("mouseup", onUp);
+    };
+
+    const onTouchStart = (e) => {
+      if (e.points.length !== 1) return;
+
+      // Prevent the default map drag behavior.
+      e.preventDefault();
+
+      map.on("touchmove", onMove);
+      map.once("touchend", onUp);
+    };
+
     if (map.getLayer(_LAYER_ID)) {
       map.removeLayer(_LAYER_ID);
     }
@@ -64,48 +94,24 @@ export function DragPoint({ onDragEnd }: DragPointProps) {
       type: "circle",
       source: _SOURCE_ID,
       paint: {
-        "circle-radius": 10,
-        "circle-color": "#F84C4C" // red color
+        "circle-radius": 8,
+        "circle-color": "#F84C4C", // red color
+        "circle-opacity": 0.8
       }
     });
 
-    map.on("mouseenter", _LAYER_ID, () => {
-      map.setPaintProperty(_LAYER_ID, "circle-color", "#3bb2d0");
-      canvas.style.cursor = "move";
-    });
-
-    map.on("mouseleave", _LAYER_ID, () => {
-      map.setPaintProperty(_LAYER_ID, "circle-color", "#3887be");
-      canvas.style.cursor = "";
-    });
-
-    map.on("mousedown", _LAYER_ID, (e) => {
-      // Prevent the default map drag behavior.
-      e.preventDefault();
-
-      canvas.style.cursor = "grab";
-
-      map.on("mousemove", onMove);
-      map.once("mouseup", onUp);
-    });
-
-    map.on("touchstart", _LAYER_ID, (e) => {
-      if (e.points.length !== 1) return;
-
-      // Prevent the default map drag behavior.
-      e.preventDefault();
-
-      map.on("touchmove", onMove);
-      map.once("touchend", onUp);
-    });
+    map.on("mouseenter", _LAYER_ID, onMouseEnter);
+    map.on("mouseleave", _LAYER_ID, onMouseLeave);
+    map.on("mousedown", _LAYER_ID, onMouseDown);
+    map.on("touchstart", _LAYER_ID, onTouchStart);
 
     return () => {
-      if (map) {
-        if (map.getLayer(_LAYER_ID)) {
-          map.removeLayer(_LAYER_ID);
-        }
-        if (map.getSource(_SOURCE_ID)) {
-          map.removeSource(_SOURCE_ID);
+      if (typeof window !== "undefined") {
+        if (map) {
+          map.off("mouseenter", _LAYER_ID, onMouseEnter);
+          map.off("mouseleave", _LAYER_ID, onMouseLeave);
+          map.off("mousedown", _LAYER_ID, onMouseDown);
+          map.off("touchstart", _LAYER_ID, onTouchStart);
         }
       }
     };

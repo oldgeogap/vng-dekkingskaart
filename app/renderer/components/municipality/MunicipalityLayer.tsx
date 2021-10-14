@@ -43,6 +43,7 @@ export function MunicipalityLayer({}: MunicipalityLayerProps) {
 
   return (
     <GeoJSONLayer
+      // @ts-ignore
       id={SOURCE_ID}
       data={"/data/gemeenten.geojson"}
       sourceOptions={{
@@ -59,6 +60,9 @@ export function MunicipalityLayer({}: MunicipalityLayerProps) {
         ],
         "fill-opacity": 0.8
       }}
+      fillOnMouseEnter={(e) => {
+        cursor(e.target, "pointer");
+      }}
       fillOnMouseMove={(e: any) => {
         if (_hoverStateId) {
           e.target.setFeatureState({ source: SOURCE_ID, id: _hoverStateId }, { hover: false });
@@ -71,6 +75,7 @@ export function MunicipalityLayer({}: MunicipalityLayerProps) {
           e.target.setFeatureState({ source: SOURCE_ID, id: _hoverStateId }, { hover: false });
         }
         _hoverStateId = null;
+        cursor(e.target, "default");
       }}
       fillOnClick={(e: any) => {
         if (e.features) {
@@ -84,4 +89,8 @@ export function MunicipalityLayer({}: MunicipalityLayerProps) {
       }}
     />
   );
+}
+
+function cursor(map: any, s: string) {
+  map.getCanvasContainer().style.cursor = s;
 }

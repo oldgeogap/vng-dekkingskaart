@@ -1,19 +1,19 @@
 import * as React from "react";
 import { Filters, FilterSelection, Selection } from "renderer/ui/selection";
 import { styled } from "renderer/ui/theme";
-import { Input } from "@chakra-ui/react";
 import { LocationPointForm } from "./LocationPointForm";
-import { useLocationCheck } from "./LocationCheckProvider";
+import { LocationPoint, useLocationCheck } from "./LocationCheckProvider";
+import { IconButton } from "@chakra-ui/button";
+import { VscClose } from "react-icons/vsc";
 
 export interface LocationSelectionProps {}
 
-export type LocationPoint = {
-  x: number;
-  y: number;
-};
-
 export function LocationSelection({}: LocationSelectionProps) {
-  const { points } = useLocationCheck();
+  const { points, setPoints } = useLocationCheck();
+
+  const removePoint = (point: LocationPoint) => {
+    setPoints((old) => old.filter((p) => p.x !== point.x && p.y !== point.y));
+  };
 
   return (
     <LocationSelectionContainer>
@@ -23,11 +23,24 @@ export function LocationSelection({}: LocationSelectionProps) {
           <LocationPointForm />
         </Filters>
         <Selection>
-          {points.map((p, index) => (
-            <div key={index}>
-              {p.x.toFixed(7)}, {p.y.toFixed(7)}
-            </div>
-          ))}
+          <PointList>
+            {points.map((p, index) => (
+              <li key={index}>
+                <Coords>
+                  {p.x.toFixed(7)} <span>,</span> {p.y.toFixed(7)}
+                </Coords>
+                <IconButton
+                  aria-label="verwijderen"
+                  variant="ghost"
+                  size="xs"
+                  icon={<VscClose />}
+                  onClick={() => {
+                    removePoint(p);
+                  }}
+                />
+              </li>
+            ))}
+          </PointList>
         </Selection>
       </FilterSelection>
     </LocationSelectionContainer>
@@ -41,4 +54,26 @@ const LocationSelectionContainer = styled.section`
   display: flex;
   align-items: stretch;
   overflow: hidden;
+`;
+
+const PointList = styled.ul`
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid ${(props) => props.theme.colors.bg[100]};
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px 4px 16px;
+    align-items: center;
+  }
+`;
+
+const Coords = styled.p`
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+
+  span {
+    color: ${(props) => props.theme.colors.bg[200]};
+  }
 `;

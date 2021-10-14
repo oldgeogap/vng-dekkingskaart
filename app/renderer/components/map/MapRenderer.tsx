@@ -1,5 +1,6 @@
 import * as React from "react";
 import ReactMapboxGl, { Layer, Feature, ScaleControl, ZoomControl, RotationControl, MapContext } from "react-mapbox-gl";
+import { FitBoundsOptions } from "react-mapbox-gl/lib/map";
 import { styled } from "renderer/ui/theme";
 
 const MAPBOX_TOKEN = "pk.eyJ1Ijoic3BhdGlhbHgiLCJhIjoiY2t0Y21ncjhuMHZ2aDJ2bXlwYjZnNXkxaCJ9.dFShNUjOCOx3Gj5fMWJURw";
@@ -10,10 +11,13 @@ const Map = ReactMapboxGl({
 
 export interface MapRendererProps {
   fitBounds?: [[number, number], [number, number]];
+  fitBoundsOptions?: FitBoundsOptions;
+  center?: [number, number];
+  zoom?: number;
   children: any;
 }
 
-export function MapRenderer({ fitBounds, children }: MapRendererProps) {
+export function MapRenderer({ fitBounds, fitBoundsOptions, center, zoom, children }: MapRendererProps) {
   return (
     <Map
       style="mapbox://styles/mapbox/streets-v9"
@@ -22,9 +26,13 @@ export function MapRenderer({ fitBounds, children }: MapRendererProps) {
         height: "100%"
       }}
       fitBounds={fitBounds}
-      fitBoundsOptions={{
-        padding: 20
-      }}
+      fitBoundsOptions={
+        fitBoundsOptions || {
+          padding: 20
+        }
+      }
+      center={center}
+      zoom={zoom ? [zoom] : undefined}
     >
       {children}
       <ScaleControl />

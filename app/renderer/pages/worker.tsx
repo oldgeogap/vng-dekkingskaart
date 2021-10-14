@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { ipcRenderer } from "electron";
 import { workerActions } from "../../shared";
 import { calculateCoveragePercent } from "renderer/worker/coverage_percent";
+import { calculateCoveragePoint } from "renderer/worker/coverage_point";
 
 const Worker = () => {
   // Send logs as messages to the main thread to show on the console
@@ -19,6 +20,9 @@ const Worker = () => {
             switch (arg.action) {
               case workerActions.COVERAGE_PERCENT:
                 result = await calculateCoveragePercent(arg.payload);
+                break;
+              case workerActions.COVERAGE_POINT:
+                result = await calculateCoveragePoint(arg.payload);
                 break;
             }
 
