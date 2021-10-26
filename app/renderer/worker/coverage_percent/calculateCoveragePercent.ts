@@ -2,6 +2,7 @@ import fs from "fs";
 import * as turf from "@turf/turf";
 import { Feature, Polygon, MultiPolygon } from "@turf/turf";
 import booleanIntersects from "@turf/boolean-intersects";
+import { getMunicipalityShapes, getWorkarea } from "../util";
 export type CoveragePercentArguments = {
   id: string;
   coverageFilePath: string;
@@ -21,36 +22,14 @@ export async function calculateCoveragePercent({
   municipalityIds
 }: CoveragePercentArguments): Promise<CoveragePercentResult> {
   //result variables
-  let municipalityShapes: Feature<MultiPolygon>[] = [];
+  let municipalityShapes = await getMunicipalityShapes(municipalityIds);
   let coverageShape: any = null;
   let coveragePercent = 0;
 
   //read input
   let coverageString = fs.readFileSync(coverageFilePath, "utf8");
   let coverageJSON = JSON.parse(coverageString);
-  let muniJSON = await fetch("/data/gemeenten.geojson").then((res) => res.json());
-
-  let totalMunicipalities = municipalityIds.length;
-
-  for (let i = 0, n = muniJSON.features.length; i < n; i++) {
-    if (municipalityIds.includes(muniJSON.features[i].properties.code)) {
-      municipalityShapes.push(muniJSON.features[i]);
-    }
-    if (municipalityShapes.length === totalMunicipalities) {
-      break;
-    }
-  }
-  let workArea: Feature<MultiPolygon | Polygon>;
-  if (totalMunicipalities >= 2) {
-    workArea = turf.union(municipalityShapes[0], municipalityShapes[1]);
-    if (totalMunicipalities > 2) {
-      for (let i = 2, n = totalMunicipalities; i < n; i++) {
-        workArea = turf.union(workArea, municipalityShapes[i]);
-      }
-    }
-  } else {
-    workArea = municipalityShapes[0];
-  }
+  let workArea = getWorkarea(municipalityShapes);
 
   let bbox = turf.bbox(workArea);
   let bboxPolygon = turf.bboxPolygon(bbox);

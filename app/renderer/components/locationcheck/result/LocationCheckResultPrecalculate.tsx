@@ -5,9 +5,10 @@ import { VscCheck } from "react-icons/vsc";
 import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile } from "renderer/db";
 import { useCoveragePoints } from "renderer/hooks/useCoveragePoints";
+import { LocationPoint } from "renderer/types";
 
 import { styled } from "renderer/ui/theme";
-import { LocationPoint } from "../LocationCheckProvider";
+
 import { LocationCheckResultRender } from "./LocationCheckResultRender";
 
 export interface LocationCheckResultPrecalculateProps {

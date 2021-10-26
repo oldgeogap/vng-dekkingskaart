@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { LocationPoint } from "renderer/components/locationcheck/LocationCheckProvider";
+
 import { LocationCheckResult } from "renderer/components/locationcheck/LocationCheckResult";
+import { LocationPoint } from "renderer/types";
 
 export default function MinicompetitieResultPage() {
   const router = useRouter();

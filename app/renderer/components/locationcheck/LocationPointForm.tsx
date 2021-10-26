@@ -4,7 +4,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { VscAdd, VscClose } from "react-icons/vsc";
 import { styled } from "renderer/ui/theme";
 import { useLocationCheck } from "./LocationCheckProvider";
-import { LocationPoint } from "./LocationCheckProvider";
 
 export interface LocationPointFormProps {}
 
@@ -50,7 +49,7 @@ export function LocationPointForm({}: LocationPointFormProps) {
             variant="flushed"
             placeholder="X coordinaat"
             size="sm"
-            {...register("x", { valueAsNumber: true })}
+            {...register("x", { valueAsNumber: true, required: true })}
             step="any"
           />
         </section>
@@ -61,7 +60,7 @@ export function LocationPointForm({}: LocationPointFormProps) {
             variant="flushed"
             placeholder="Y coordinaat"
             size="sm"
-            {...register("y", { valueAsNumber: true })}
+            {...register("y", { valueAsNumber: true, required: true })}
             step="any"
           />
         </section>

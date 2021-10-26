@@ -1,5 +1,5 @@
 import { FitBounds } from "react-mapbox-gl/lib/map";
-import { LocationPoint } from "renderer/components/locationcheck/LocationCheckProvider";
+import { LocationPoint } from "renderer/types";
 
 export function bboxForPoints(points: LocationPoint[]): FitBounds {
   const minX = points.reduce((min, p) => Math.min(min, p.x), Number.MAX_VALUE);

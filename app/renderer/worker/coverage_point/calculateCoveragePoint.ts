@@ -2,7 +2,7 @@ import fs from "fs";
 import * as turf from "@turf/turf";
 import { Feature, Polygon, Point } from "@turf/turf";
 import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
-import { LocationPoint } from "renderer/components/locationcheck/LocationCheckProvider";
+import { LocationPoint } from "renderer/types";
 
 type CoveragePoint = {
   point: Feature<Point>;

@@ -7,22 +7,23 @@ import { VscClose } from "react-icons/vsc";
 
 export interface MapControlDragPointProps {
   onDragEnd: (x: number, y: number) => void;
+  y?: number;
 }
 
-export function MapControlDragPoint({ onDragEnd }: MapControlDragPointProps) {
+export function MapControlDragPoint({ onDragEnd, y }: MapControlDragPointProps) {
   const [show, setShow] = React.useState(false);
 
   const toggle = () => setShow((c) => !c);
   return (
-    <MapControlDragPointContainer>
+    <MapControlDragPointContainer top={y ? `${y}px` : "16px"}>
       <IconButton aria-label="toggle" icon={show ? <VscClose /> : <MdAddLocation />} onClick={toggle} />
       {show && <DragPoint onDragEnd={onDragEnd} />}
     </MapControlDragPointContainer>
   );
 }
 
-const MapControlDragPointContainer = styled.div`
+const MapControlDragPointContainer = styled.div<{ top: string }>`
   position: absolute;
   left: 16px;
-  top: 16px;
+  top: ${(props) => props.top};
 `;

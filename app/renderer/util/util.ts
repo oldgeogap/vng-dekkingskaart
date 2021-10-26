@@ -30,3 +30,16 @@ export function formatNumber(num: number, unit: string) {
   }
   return "";
 }
+
+export function parsePointString(s: string): [number, number] | null {
+  if (s.length > 8) {
+    let bit = s.substring(6);
+    bit = bit.substring(0, bit.length - 1);
+    let bits = bit.split(" ");
+    if (bits.length === 2) {
+      return [parseFloat(bits[0]), parseFloat(bits[1])];
+    }
+  }
+
+  return null;
+}

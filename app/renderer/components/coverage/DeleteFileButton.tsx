@@ -60,7 +60,7 @@ export function DeleteFileButton({ file, ...buttonProps }: DeleteFileButtonProps
     <>
       <ConfirmIconButton
         title="Dekkingskaart verwijderen"
-        description="bla"
+        description="Bevestig het verwijderen van dit bestand"
         isLoading={deleting}
         onClick={() => setDeleting(true)}
         {...buttonProps}

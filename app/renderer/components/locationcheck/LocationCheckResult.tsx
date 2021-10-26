@@ -2,8 +2,9 @@ import { IconButton } from "@chakra-ui/button";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { VscChevronLeft, VscClose } from "react-icons/vsc";
+import { LocationPoint } from "renderer/types";
 import { styled } from "renderer/ui/theme";
-import { LocationPoint } from "./LocationCheckProvider";
+
 import { LocationCheckResultPreload } from "./result/LocationCheckResultPreload";
 
 export interface LocationCheckResultProps {

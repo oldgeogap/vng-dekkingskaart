@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CoverageFile, db } from "renderer/db";
-import { LocationPoint } from "../LocationCheckProvider";
+import { LocationPoint } from "renderer/types";
 import { LocationCheckResultPrecalculate } from "./LocationCheckResultPrecalculate";
 
 export interface LocationCheckResultPreloadProps {

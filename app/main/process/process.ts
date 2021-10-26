@@ -6,6 +6,7 @@ import { app } from "electron";
 
 import fs from "fs-extra";
 import path from "path";
+import { processShapefile } from "./processors/shapefile";
 
 ipcMain.on(ipcEvents.BROWSE_FILES, async (event, arg) => {
   let result = await dialog.showOpenDialog({ properties: ["openFile"] });
@@ -51,7 +52,7 @@ async function processFiles(paths: string[], targetName: string) {
       case "geojson":
         return await processGeoJSON(path, getTargetPath(targetName));
       case "zip":
-        throw new Error("shapefile not supported yet");
+        return await processShapefile(path, getTargetPath(targetName));
       default:
         throw new Error("Unsupported file type");
     }

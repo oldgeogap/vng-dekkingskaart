@@ -4,9 +4,10 @@ import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile } from "renderer/db";
 
 import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
+import { LocationPoint } from "renderer/types";
 import { CoverageFileHeader } from "renderer/ui/header/CoverageFileHeader";
 import { styled } from "renderer/ui/theme";
-import { LocationPoint } from "../LocationCheckProvider";
+
 import { LocationCheckResultRenderMap } from "./LocationCheckResultRenderMap";
 
 export interface LocationCheckResultRenderProps {

@@ -18,8 +18,8 @@ if (isProd) {
   await app.whenReady();
 
   const mainWindow = createWindow("main", {
-    width: 1024,
-    height: 768
+    width: 1200,
+    height: 900
   });
 
   const workerWindow = createWindow("worker", {

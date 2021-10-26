@@ -2,29 +2,37 @@ import * as React from "react";
 import { styled } from "renderer/ui/theme";
 import { CoverageFileLayers } from "../coverage/CoverageFileLayer";
 import { CoverageSelection } from "../coverage/CoverageSelection";
-
 import { MapRenderer } from "../map/MapRenderer";
-
 import { MunicipalityLayer } from "../municipality/MunicipalityLayer";
 import { MunicipalitySelection } from "../municipality/MunicipalitySelection";
+import { RandomizerControl } from "./RandomizerControl";
+import { RandomizerLayer } from "./RandomizerLayer";
+import { RandomizerLocationSelection } from "./RandomizerLocationSelection";
+import { RandomizerProvider, useRandomizer } from "./RandomizerProvider";
 
-import { MiniCompetitionControl } from "./MiniCompetitionControl";
-import { MiniCompetitionGeocoder } from "./MiniCompetitionGeocoder";
+export interface RandomizerHomeProps {}
 
-export interface MiniCompetitionHomeProps {}
-
-export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
-  const [coverageFileVisible, setCoverageFileVisible] = React.useState<number[]>([]);
+export function RandomizerHome() {
   return (
-    <MiniCompetitionHomeContainer>
+    <RandomizerProvider>
+      <RandomizerHomeInner />
+    </RandomizerProvider>
+  );
+}
+
+export function RandomizerHomeInner({}: RandomizerHomeProps) {
+  const [coverageFileVisible, setCoverageFileVisible] = React.useState<number[]>([]);
+  const { points } = useRandomizer();
+  return (
+    <RandomizerHomeContainer>
       <Municipalities>
         <MunicipalitySelection />
       </Municipalities>
       <CoverageMaps>
         <CoverageSelection coverageFileVisible={coverageFileVisible} setCoverageFileVisible={setCoverageFileVisible} />
       </CoverageMaps>
-      <MiniCompetitionControl />
-
+      <RandomizerLocationSelection />
+      <RandomizerControl />
       <MapContainer>
         <MapRenderer
           fitBounds={[
@@ -32,23 +40,23 @@ export function MiniCompetitionHome({}: MiniCompetitionHomeProps) {
             [8.007755687486053, 53.65674661767193]
           ]}
         >
-          <MunicipalityLayer />
+          <MunicipalityLayer showMode={points && points.length > 0} />
+          <RandomizerLayer />
           <CoverageFileLayers visibleIDS={coverageFileVisible} />
-          <MiniCompetitionGeocoder />
         </MapRenderer>
       </MapContainer>
-    </MiniCompetitionHomeContainer>
+    </RandomizerHomeContainer>
   );
 }
 
-const MiniCompetitionHomeContainer = styled.div`
+const RandomizerHomeContainer = styled.div`
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr 3fr;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
   grid-template-rows: 9fr 1fr;
   grid-template-areas:
-    "muni cov map"
-    "control control map";
+    "muni cov loc map"
+    "control control control map";
 `;
 
 const Municipalities = styled.section`

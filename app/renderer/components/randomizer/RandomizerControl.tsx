@@ -5,12 +5,12 @@ import { VscRemoteExplorer } from "react-icons/vsc";
 import { styled } from "renderer/ui/theme";
 import { useAppState } from "../provider/AppStateProvider";
 
-import { useLocationCheck } from "./LocationCheckProvider";
+import { useRandomizer } from "./RandomizerProvider";
 
-export interface LocationCheckControlProps {}
+export interface RandomizerControlProps {}
 
-export function LocationCheckControl({}: LocationCheckControlProps) {
-  const { points } = useLocationCheck();
+export function RandomizerControl({}: RandomizerControlProps) {
+  const { points } = useRandomizer();
   const { coverageSelection } = useAppState();
   const router = useRouter();
 

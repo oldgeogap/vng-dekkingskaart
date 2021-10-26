@@ -9,6 +9,7 @@ export function LocationCheckMapControls({}: LocationCheckMapControlsProps) {
   return (
     <>
       <MapControlDragPoint
+        y={64}
         onDragEnd={(x, y) => {
           setPreset({ x, y });
         }}

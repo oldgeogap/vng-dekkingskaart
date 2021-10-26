@@ -3,7 +3,7 @@ import { ipcRenderer } from "electron";
 import { workerActions } from "../../shared";
 import { calculateCoveragePercent } from "renderer/worker/coverage_percent";
 import { calculateCoveragePoint } from "renderer/worker/coverage_point";
-
+import { calculateRandomPoints } from "renderer/worker/random_points";
 const Worker = () => {
   // Send logs as messages to the main thread to show on the console
   const log = (value) => {
@@ -23,6 +23,9 @@ const Worker = () => {
                 break;
               case workerActions.COVERAGE_POINT:
                 result = await calculateCoveragePoint(arg.payload);
+                break;
+              case workerActions.RANDOM_POINTS:
+                result = await calculateRandomPoints(arg.payload);
                 break;
             }
 

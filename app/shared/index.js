@@ -14,5 +14,6 @@ export const ipcEvents = {
 
 export const workerActions = {
   COVERAGE_PERCENT: "COVERAGE_PERCENT",
-  COVERAGE_POINT: "COVERAGE_POINT"
+  COVERAGE_POINT: "COVERAGE_POINT",
+  RANDOM_POINTS: "RANDOM_POINTS"
 };

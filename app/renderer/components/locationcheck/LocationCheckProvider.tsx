@@ -1,14 +1,9 @@
 import * as React from "react";
+import { LocationPoint } from "renderer/types";
 
 export interface LocationCheckProviderProps {
   children: React.ReactNode;
 }
-
-export type LocationPoint = {
-  x: number;
-  y: number;
-  hasCoverage?: boolean;
-};
 
 export interface ILocationCheckContext {
   preset?: LocationPoint;

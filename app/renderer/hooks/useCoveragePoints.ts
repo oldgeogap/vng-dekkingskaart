@@ -1,7 +1,7 @@
 import * as React from "react";
 import electron from "electron";
 import { workerActions } from "../../shared";
-import { LocationPoint } from "renderer/components/locationcheck/LocationCheckProvider";
+import { LocationPoint } from "renderer/types";
 
 const ipcRenderer = electron.ipcRenderer || false;
 

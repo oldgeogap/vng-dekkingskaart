@@ -58,7 +58,8 @@ export function AppStateProvider({ children }: AppStateProviderProps) {
   }, [coverageSelection]);
 
   const municipalitySelect = (munis: Municipality[]) => {
-    setMunicipalitySelection((c) => [...c, ...munis]);
+    let ids = munis.map((m) => m.id);
+    setMunicipalitySelection((c) => [...c.filter((m) => !ids.includes(m.id)), ...munis]);
   };
 
   const municipalityDeselect = (ids: string[]) => {
@@ -66,7 +67,8 @@ export function AppStateProvider({ children }: AppStateProviderProps) {
   };
 
   const coverageSelect = (cov: CoverageFile[]) => {
-    setCoverageSelection((c) => [...c, ...cov]);
+    let ids = cov.map((c) => c.id);
+    setCoverageSelection((c) => [...c.filter((cm) => !ids.includes(cm.id)), ...cov]);
   };
 
   const coverageDeselect = (ids: number[]) => {

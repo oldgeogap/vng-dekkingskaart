@@ -1,27 +1,28 @@
 import * as React from "react";
 import { Filters, FilterSelection, Selection } from "renderer/ui/selection";
 import { styled } from "renderer/ui/theme";
-import { LocationPointForm } from "./LocationPointForm";
-import { useLocationCheck } from "./LocationCheckProvider";
+
+import { useRandomizer } from "./RandomizerProvider";
 import { IconButton } from "@chakra-ui/button";
 import { VscClose } from "react-icons/vsc";
+import { RandomizerLocationForm } from "./RandomizerLocationForm";
 import { LocationPoint } from "renderer/types";
 
-export interface LocationSelectionProps {}
+export interface RandomizerLocationSelectionProps {}
 
-export function LocationSelection({}: LocationSelectionProps) {
-  const { points, setPoints } = useLocationCheck();
+export function RandomizerLocationSelection({}: RandomizerLocationSelectionProps) {
+  const { points, setPoints } = useRandomizer();
 
   const removePoint = (point: LocationPoint) => {
     setPoints((old) => old.filter((p) => p.x !== point.x && p.y !== point.y));
   };
 
   return (
-    <LocationSelectionContainer>
+    <RandomizerLocationSelectionContainer>
       <FilterSelection>
-        <h2>Locaties</h2>
+        <h2>Willekeurige locaties</h2>
         <Filters>
-          <LocationPointForm />
+          <RandomizerLocationForm />
         </Filters>
         <Selection>
           <PointList>
@@ -44,12 +45,12 @@ export function LocationSelection({}: LocationSelectionProps) {
           </PointList>
         </Selection>
       </FilterSelection>
-    </LocationSelectionContainer>
+    </RandomizerLocationSelectionContainer>
   );
 }
 
-const LocationSelectionContainer = styled.section`
-  grid-area: locs;
+const RandomizerLocationSelectionContainer = styled.section`
+  grid-area: loc;
   border-right: 1px solid ${(props) => props.theme.colors.bg[100]};
 
   display: flex;

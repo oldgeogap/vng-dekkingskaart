@@ -4,6 +4,7 @@ import { CoverageFileLayers } from "../coverage/CoverageFileLayer";
 import { CoverageSelection } from "../coverage/CoverageSelection";
 import { MapRenderer } from "../map/MapRenderer";
 import { LocationCheckControl } from "./LocationCheckControl";
+import { LocationCheckGeocoder } from "./LocationCheckGeocoder";
 import { LocationCheckLayer } from "./LocationCheckLayer";
 import { LocationCheckMapControls } from "./LocationCheckMapControls";
 import { LocationCheckProvider, useLocationCheck } from "./LocationCheckProvider";
@@ -36,6 +37,7 @@ export function LocationCheckHomeInner({}: LocationCheckHomeProps) {
             [8.007755687486053, 53.65674661767193]
           ]}
         >
+          <LocationCheckGeocoder />
           <LocationCheckLayer />
           <LocationCheckMapControls />
           <CoverageFileLayers visibleIDS={coverageFileVisible} />

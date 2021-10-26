@@ -6,9 +6,9 @@ import { MapRenderer } from "renderer/components/map/MapRenderer";
 import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile } from "renderer/db";
 import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
+import { LocationPoint } from "renderer/types";
 import { styled } from "renderer/ui/theme";
 import { bboxForPoints, formatNumber } from "renderer/util";
-import { LocationPoint } from "../LocationCheckProvider";
 
 export interface LocationCheckResultRenderMapProps {
   nr: number;
