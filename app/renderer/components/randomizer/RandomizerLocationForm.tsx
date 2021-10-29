@@ -40,7 +40,7 @@ export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
 
   React.useEffect(() => {
     if (points) {
-      setPoints(points);
+      setPoints((p) => [...p, ...points]);
       reset();
     }
   }, [points]);
@@ -59,7 +59,7 @@ export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
           <FormLabel>Punten toevoegen</FormLabel>
           <InputGroup>
             <NumberInput size="sm" isDisabled={disabled}>
-              <NumberInputField {...register("count", { required: true, valueAsNumber: true })} />
+              <NumberInputField {...register("count", { required: true, valueAsNumber: true, min: 1, max: 20 })} />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />

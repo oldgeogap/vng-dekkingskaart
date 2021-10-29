@@ -2,6 +2,7 @@ import * as React from "react";
 import electron from "electron";
 import { workerActions } from "../../shared";
 import { LocationPoint } from "renderer/types";
+import { Feature, MultiPolygon } from "@turf/helpers";
 
 const ipcRenderer = electron.ipcRenderer || false;
 
@@ -15,6 +16,7 @@ export type CoveragePointEntry = {
   id: string;
   loaded: boolean;
   coverageFilePath: string;
+  coverageShape: Feature<MultiPolygon> | null;
   points: LocationPoint[] | null;
 };
 
@@ -35,20 +37,21 @@ export function useCoveragePoints({ entries }: UseCoveragePointsParams) {
       loaded: false,
       coverageFilePath: entry.coverageFilePath,
       points: entry.points,
-      hasCoverage: null
+      hasCoverage: null,
+      coverageShape: null
     }))
   );
 
   React.useEffect(() => {
     if (ipcRenderer) {
       const onResult = (event, resp) => {
-        console.log("onResult", resp);
         let data = resp.result;
         setResult((old) => {
           let entry = old.find((entry) => entry.id === data.id);
           if (entry) {
             entry.loaded = true;
             entry.points = data.points;
+            entry.coverageShape = data.coverageShape;
             return [...old.filter((o) => o.id !== data.id), entry];
           }
           return old;
@@ -69,7 +72,6 @@ export function useCoveragePoints({ entries }: UseCoveragePointsParams) {
     if (ipcRenderer) {
       let entry = result.find((entry) => !entry.loaded);
       if (entry) {
-        console.log("Sending entry", entry.id);
         ipcRenderer.send("for-worker", {
           action: workerActions.COVERAGE_POINT,
           payload: {

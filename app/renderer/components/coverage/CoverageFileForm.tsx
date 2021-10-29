@@ -164,21 +164,23 @@ export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProp
                 {errors.coverageType && <FormErrorMessage>Dit veld is verplicht</FormErrorMessage>}
               </FormControl>
               <FormControl id="year" isRequired mb={4} isInvalid={!!errors.year}>
-                <FormLabel>Jaar</FormLabel>
+                <FormLabel>Versie</FormLabel>
                 <Input {...register("year", { required: true })} />
                 {errors.year && <FormErrorMessage>Dit veld is verplicht</FormErrorMessage>}
               </FormControl>
-              <FormControl id="paths" isRequired mb={4} isInvalid={!!errors.selectPaths}>
-                <FormLabel>Bestand(en)</FormLabel>
-                <Input type="hidden" {...register("selectPaths", { required: isUpdate ? !!!file.path : true })} />
-                {paths && paths.map((path, index) => <p key={index}>{path}</p>)}
-                <FileSelector
-                  onSelect={(paths) => {
-                    setPaths(paths);
-                  }}
-                />
-                {errors.selectPaths && <FormErrorMessage>Dit veld is verplicht</FormErrorMessage>}
-              </FormControl>
+              <div style={{ display: isUpdate ? "none" : "block" }}>
+                <FormControl id="paths" isRequired mb={4} isInvalid={!!errors.selectPaths}>
+                  <FormLabel>Bestand(en)</FormLabel>
+                  <Input type="hidden" {...register("selectPaths", { required: isUpdate ? !!!file.path : true })} />
+                  {paths && paths.map((path, index) => <p key={index}>{path}</p>)}
+                  <FileSelector
+                    onSelect={(paths) => {
+                      setPaths(paths);
+                    }}
+                  />
+                  {errors.selectPaths && <FormErrorMessage>Dit veld is verplicht</FormErrorMessage>}
+                </FormControl>
+              </div>
             </form>
           </FormContainer>
 

@@ -15,7 +15,11 @@ export function findOptionName(options: Option[], id: number): string {
 
 export function formatTimestamp(n: number) {
   let d = new Date(n);
-  return format(d, "dd-MM-yyyy HH:mm:ss");
+  return format(d, "dd-MM-yyyy HH:mm:ss", { locale: nl });
+}
+
+export function formatDate(d: Date) {
+  return format(d, "dd-MM-yyyy HH:mm:ss", { locale: nl });
 }
 
 export function formatTimestampDistance(n: number) {

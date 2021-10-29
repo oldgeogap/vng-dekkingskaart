@@ -63,7 +63,7 @@ export function CoverageHome({}: CoverageHomeProps) {
                 }}
                 dir={sortBy[1]}
               >
-                jaar
+                versie
               </SortHeader>
               <SortHeader
                 active={sortBy[0] === "created_at"}

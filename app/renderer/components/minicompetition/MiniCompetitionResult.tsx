@@ -1,4 +1,5 @@
 import { IconButton } from "@chakra-ui/button";
+import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { VscChevronLeft, VscClose } from "react-icons/vsc";
@@ -15,14 +16,15 @@ export function MiniCompetitionResult({ municipalityIds, coverageFileIds }: Mini
   return (
     <>
       <Back>
-        <IconButton
+        <Button
           colorScheme="bg"
           aria-label="Terug"
-          icon={<VscClose />}
-          isRound
+          leftIcon={<VscClose />}
           size="sm"
           onClick={() => router.push("/minicompetitie")}
-        />
+        >
+          Sluiten
+        </Button>
       </Back>
       <MiniCompetitionPreload municipalityIds={municipalityIds} coverageFileIds={coverageFileIds} />
     </>
@@ -31,6 +33,7 @@ export function MiniCompetitionResult({ municipalityIds, coverageFileIds }: Mini
 
 const Back = styled.div`
   position: fixed;
+  bottom: 10px;
   right: 10px;
-  top: 10px;
+  z-index: 3;
 `;

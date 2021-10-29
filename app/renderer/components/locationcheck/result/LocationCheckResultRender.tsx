@@ -1,14 +1,17 @@
-import { Heading, Center } from "@chakra-ui/react";
+import { Heading, Center, Spinner } from "@chakra-ui/react";
+import { PDFViewer } from "@react-pdf/renderer";
+import { AnimatePresence } from "framer-motion";
 import * as React from "react";
+import { MapState, useMapRenderImage } from "renderer/components/map/render/useMapRenderImage";
 import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile } from "renderer/db";
 
 import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
 import { LocationPoint } from "renderer/types";
-import { CoverageFileHeader } from "renderer/ui/header/CoverageFileHeader";
+import { FeedbackPanel } from "renderer/ui/panel";
 import { styled } from "renderer/ui/theme";
 
-import { LocationCheckResultRenderMap } from "./LocationCheckResultRenderMap";
+import { LocationCheckResultRenderPDF } from "./LocationCheckResultRenderPDF";
 
 export interface LocationCheckResultRenderProps {
   coverageFiles: CoverageFile[];
@@ -18,188 +21,167 @@ export interface LocationCheckResultRenderProps {
 
 export function LocationCheckResultRender({ coverageFiles, points, entries }: LocationCheckResultRenderProps) {
   const { providerName, coverageTypeName } = useApp();
-
-  const getCovFile = (id: string) => {
-    return coverageFiles.find((cf) => `${cf.id}` === id);
-  };
+  const renderImageProps = React.useMemo(
+    () => ({
+      dpi: 96,
+      renderContainer: document.body,
+      mapStates: getMapStates(entries)
+    }),
+    [entries]
+  );
+  const { generating, images } = useMapRenderImage(renderImageProps);
 
   return (
     <RenderContainer>
-      <Heading mb="16px">Minicompetitie</Heading>
-
-      <Summary>
-        <section>
-          <h2>Punten</h2>
-          {points.map((point, index) => (
-            <div key={index}>
-              {point.x.toFixed(7)} , {point.y.toFixed(7)}
-            </div>
-          ))}
-        </section>{" "}
-        <section>
-          <h2>Dekkingskaarten</h2>
-          {coverageFiles.map((coverageFile) => (
-            <div className="entry" key={coverageFile.id}>
-              <label>{providerName(coverageFile.provider)}</label>
-              <p>{coverageTypeName(coverageFile.coverage_type)}</p>
-              <span>{coverageFile.year}</span>
-            </div>
-          ))}
-        </section>
-      </Summary>
-
-      <Spacer />
-      <Center>
-        <Table>
-          <thead>
-            <tr>
-              <th className="empty"></th>
-              {points.map((p, index) => (
-                <th key={index}>Punt {index + 1}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry, index) => {
-              const covFile = getCovFile(entry.id);
-              return (
-                <tr key={index}>
-                  <td className="title">
-                    {providerName(covFile.provider)}
-                    {coverageTypeName(covFile.coverage_type)}
-                    {covFile.year}
-                  </td>
-                  {entry.points.map((point, index) => (
-                    <td key={index}>{point.hasCoverage ? "JA" : "NEE"}</td>
-                  ))}
-                </tr>
-              );
+      <AnimatePresence>
+        {generating && (
+          <FeedbackPanel
+            title="Genereren kaart afbeeldingen"
+            entries={coverageFiles.map((covFile) => {
+              let imgs = images.filter((img) => img.helperId && img.helperId === `${covFile.id}`);
+              let total = imgs.length;
+              let loaded = imgs.reduce((acc, img) => (img.image !== null ? acc + 1 : acc), 0);
+              return {
+                label: `${providerName(covFile.provider)} ${coverageTypeName(covFile.coverage_type)} ${covFile.year}`,
+                subLabel: `Punt ${loaded} / ${total}`,
+                done: total === loaded
+              };
             })}
-          </tbody>
-        </Table>
-      </Center>
-      <Spacer />
-      <CoverageFileList>
-        {entries.map((entry, index) => {
-          const covFile = getCovFile(entry.id);
-          return (
-            <CoverageFileEntry key={entry.id}>
-              <h4>Dekkingskaart {index + 1}</h4>
-              <CoverageFileHeader covFile={covFile} />
-
-              <LocationCheckResultRenderMap nr={index + 1} points={entry.points} />
-            </CoverageFileEntry>
-          );
-        })}
-      </CoverageFileList>
+          />
+        )}
+      </AnimatePresence>
+      {!generating && (
+        <>
+          <PDFViewer width={window.innerWidth} height={window.innerHeight} style={{ position: "absolute", zIndex: 2 }}>
+            <LocationCheckResultRenderPDF
+              providerName={providerName}
+              coverageTypeName={coverageTypeName}
+              coverageFiles={coverageFiles}
+              points={points}
+              entries={entries}
+              images={images}
+            />
+          </PDFViewer>
+          <PDFLoadingIndication>
+            <div className="holder">
+              PDF aan het genereren <Spinner ml={16} />
+            </div>
+          </PDFLoadingIndication>
+        </>
+      )}
     </RenderContainer>
   );
 }
 
 const RenderContainer = styled.div`
-  padding: 32px 64px;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
 `;
 
-const Summary = styled.div`
-  display: flex;
-  section {
-    flex: 0 0 50%;
-    h2 {
-      text-transform: uppercase;
-      color: ${(props) => props.theme.colors.bg[400]};
-      font-size: 12px;
-    }
+export const PDFLoadingIndication = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 
-    .entry {
-      display: flex;
-      justify-content: space-between;
+  .holder {
+    display: flex;
+    align-items: center;
+  }
+`;
 
-      label {
-        flex: 0 0 100px;
-        font-weight: bold;
+function getMapStates(entries: CoveragePointEntry[]): MapState[] {
+  let result: MapState[] = [];
+  entries.forEach((entry, index) => {
+    entry.points.forEach((point, index2) => {
+      let geoJson = getGeoJSON(point, index2);
+      let mapState: MapState = {
+        id: `${index}x${index2}`,
+        helperId: entry.id,
+        style: "mapbox://styles/mapbox/streets-v9",
+        viewport: {
+          width: 800,
+          height: 600,
+          center: [point.x, point.y],
+          zoom: 18
+        },
+        sources: [
+          {
+            id: `source${index2}coverage`,
+            source: {
+              type: "geojson",
+              data: {
+                type: "FeatureCollection",
+                features: [entry.coverageShape]
+              }
+            }
+          },
+          {
+            id: `source${index2}`,
+            source: {
+              type: "geojson",
+              data: geoJson
+            }
+          }
+        ],
+        layers: [
+          {
+            id: `layer${index2}coverage`,
+            source: `source${index2}coverage`,
+            type: "fill",
+            paint: {
+              "fill-color": "#0000f2",
+              "fill-opacity": 0.3
+            }
+          },
+          {
+            id: `layer${index2}circle`,
+            type: "circle",
+            source: `source${index2}`,
+            paint: {
+              "circle-radius": 24,
+              "circle-color": ["case", ["boolean", ["get", "coverage"], false], "green", "red"],
+              "circle-opacity": 0.3,
+              "circle-stroke-color": "black",
+              "circle-stroke-width": 2
+            }
+          },
+          {
+            id: `layer${index2}symbol`,
+            source: `source${index2}`,
+            type: "symbol",
+            layout: {
+              "text-field": "{nr}",
+              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+              "text-size": 24
+            }
+          }
+        ]
+      };
+      result.push(mapState);
+    });
+  });
+  return result;
+}
+
+function getGeoJSON(point: LocationPoint, index: number) {
+  return {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        properties: {
+          nr: `${index + 1}`,
+          coverage: !!point.hasCoverage
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [point.x, point.y]
+        }
       }
-
-      p {
-        flex: 1 1 auto;
-      }
-    }
-  }
-`;
-
-const Spacer = styled.div`
-  height: 1px;
-  margin: 32px 0;
-  background-color: ${(props) => props.theme.colors.bg[100]};
-`;
-
-const Table = styled.table`
-  min-width: 600px;
-
-  th {
-    text-align: right;
-    padding-right: 16px;
-    background-color: ${(props) => props.theme.colors.bg[50]};
-    border-right: 2px solid white;
-    border-bottom: 2px solid white;
-    border-top-left-radius: 16px;
-
-    &.empty {
-      background-color: transparent;
-      border-right: 0;
-    }
-  }
-
-  tr {
-    td {
-      background-color: ${(props) => props.theme.colors.bg[50]};
-      border-bottom: 2px solid white;
-      padding: 4px 8px;
-      &.title {
-        text-align: left;
-        font-weight: bold;
-      }
-
-      &.value {
-        text-align: right;
-        padding-right: 16px;
-        border-right: 2px solid white;
-      }
-    }
-
-    &:nth-of-type(even) {
-      td {
-        background-color: ${(props) => props.theme.colors.bg[100]};
-      }
-    }
-  }
-`;
-const CoverageFileList = styled.div``;
-const CoverageFileEntry = styled.div`
-  h4 {
-    text-transform: uppercase;
-    color: ${(props) => props.theme.colors.bg[400]};
-  }
-  margin-bottom: 64px;
-`;
-
-const PointList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-const PointEntry = styled.div`
-  flex: 0 0 50%; /* 50% width */
-  margin-bottom: 32px;
-  padding-right: 16px;
-  &:nth-of-type(even) {
-    padding-right: 0;
-    padding-left: 16px;
-  }
-`;
-
-export const numberFormatter = new Intl.NumberFormat("nl-NL");
-function formatNumber(num: number, unit: string) {
-  if (num) {
-    return `${numberFormatter.format(num)}${unit}`;
-  }
-  return "";
+    ]
+  } as any;
 }

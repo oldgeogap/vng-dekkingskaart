@@ -7,9 +7,9 @@ export const providerFixture: Provider[] = [
 ];
 
 export const coverageTypeFixture: CoverageType[] = [
-  { name: "Spraak" },
-  { name: "Data laag" },
-  { name: "Data gemiddeld" },
+  { name: "Spraak 2G/3G" },
+  { name: "Spraak IP" },
+  { name: "Data regulier" },
   { name: "Data hoog" }
 ];
 

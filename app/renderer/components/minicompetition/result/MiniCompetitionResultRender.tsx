@@ -1,10 +1,14 @@
-import { Heading, Center } from "@chakra-ui/react";
 import * as React from "react";
+import { MapState, useMapRenderImage } from "renderer/components/map/render/useMapRenderImage";
 import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile, Municipality } from "renderer/db";
 import { CoveragePercentEntry } from "renderer/hooks/useCoveragePercent";
 import { styled } from "renderer/ui/theme";
-import { MiniCompetitionResultRenderMap } from "./MiniCompetitionResultRenderMap";
+import { bbox } from "@turf/turf";
+import { MiniCompetitionResultRenderPDF } from "./MiniCompetitionResultRenderPDF";
+import { PDFViewer } from "@react-pdf/renderer";
+import { AnimatePresence } from "framer-motion";
+import { FeedbackPanel } from "renderer/ui/panel";
 
 export interface MiniCompetitionResultRenderProps {
   municipalities: Municipality[];
@@ -19,172 +23,136 @@ export function MiniCompetitionResultRender({
 }: MiniCompetitionResultRenderProps) {
   const { providerName, coverageTypeName } = useApp();
 
-  const providerIds = React.useMemo(() => {
-    let s = new Set<number>();
-    coverageFiles.forEach((cov) => s.add(cov.provider));
-    return Array.from(s);
-  }, [coverageFiles]);
+  const renderImageProps = React.useMemo(
+    () => ({
+      dpi: 96,
+      renderContainer: document.body,
+      mapStates: getMapStates(coverageFiles, entries)
+    }),
+    [entries]
+  );
 
-  const coverageTypes = React.useMemo(() => {
-    let s = new Set<number>();
-    coverageFiles.forEach((cov) => s.add(cov.coverage_type));
-    return Array.from(s);
-  }, [coverageFiles]);
+  const { generating, images } = useMapRenderImage(renderImageProps);
 
-  const getCoverageFileEntry = (covTypeId: number, providerId: number) => {
-    let covFileId = coverageFiles.find((cov) => cov.coverage_type === covTypeId && cov.provider === providerId)?.id;
-    if (covFileId) {
-      let entry = entries.find((o) => o.id === `${covFileId}`);
-      if (entry) {
-        return entry;
-      }
+  const getLabelAndSublabel = (id: string | number) => {
+    let covFile = coverageFiles.find((covFile) => covFile.id == id);
+    if (covFile) {
+      return {
+        label: `${providerName(covFile.provider)} ${covFile.year}`,
+        subLabel: coverageTypeName(covFile.coverage_type)
+      };
     }
-    return null;
+    return {
+      label: "leeg"
+    };
   };
 
   return (
     <RenderContainer>
-      <Heading mb="16px">Minicompetitie</Heading>
-
-      <Summary>
-        <section>
-          <h2>Gemeenten</h2>
-          {municipalities.map((municipality) => (
-            <div key={municipality.id}>{municipality.name}</div>
-          ))}
-        </section>{" "}
-        <section>
-          <h2>Dekkingskaarten</h2>
-          {coverageFiles.map((coverageFile) => (
-            <div className="entry" key={coverageFile.id}>
-              <label>{providerName(coverageFile.provider)}</label>
-              <p>{coverageTypeName(coverageFile.coverage_type)}</p>
-              <span>{coverageFile.year}</span>
-            </div>
-          ))}
-        </section>
-      </Summary>
-      <Spacer />
-      <Center>
-        <Table>
-          <thead>
-            <tr>
-              <th className="empty"></th>
-              {providerIds.map((id) => (
-                <th key={id}>{providerName(id)}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {coverageTypes.map((covID) => (
-              <tr key={covID}>
-                <td className="title">{coverageTypeName(covID)}</td>
-                {providerIds.map((providerId) => (
-                  <td className="value" key={providerId}>
-                    {formatNumber(getCoverageFileEntry(covID, providerId)?.coveragePercent, "%")}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Center>
-      <Spacer />
-      {coverageFiles.map((cov, index) => (
-        <MiniCompetitionResultRenderMap
-          key={cov.id}
-          nr={index + 1}
-          municipalities={municipalities}
-          coverageFile={cov}
-          entry={entries.find((o) => o.id === `${cov.id}`)}
-        />
-      ))}
+      <AnimatePresence>
+        {generating && (
+          <FeedbackPanel
+            title="Genereren kaart afbeeldingen"
+            entries={images.map((img) => {
+              let { label, subLabel } = getLabelAndSublabel(img.id);
+              return {
+                label,
+                subLabel,
+                done: img.image !== null
+              };
+            })}
+          />
+        )}
+      </AnimatePresence>
+      {!generating && (
+        <PDFViewer width={window.innerWidth} height={window.innerHeight}>
+          <MiniCompetitionResultRenderPDF
+            providerName={providerName}
+            coverageTypeName={coverageTypeName}
+            coverageFiles={coverageFiles}
+            entries={entries}
+            municipalities={municipalities}
+            images={images}
+          />
+        </PDFViewer>
+      )}
     </RenderContainer>
   );
 }
 
 const RenderContainer = styled.div`
-  padding: 32px 64px;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 `;
 
-const Summary = styled.div`
-  display: flex;
-  section {
-    flex: 0 0 50%;
-    h2 {
-      text-transform: uppercase;
-      color: ${(props) => props.theme.colors.bg[400]};
-      font-size: 12px;
-    }
+function getMapStates(coverageFiles: CoverageFile[], entries: CoveragePercentEntry[]): MapState[] {
+  let result: MapState[] = [];
+  coverageFiles.forEach((cov, index) => {
+    let entry = entries.find((o) => o.id === `${cov.id}`);
 
-    .entry {
-      display: flex;
-      justify-content: space-between;
+    const workAreaGeoJSON: any = {
+      type: "FeatureCollection",
+      features: entry.municipalityShapes
+    };
 
-      label {
-        flex: 0 0 100px;
-        font-weight: bold;
-      }
+    const coverageGeoJSON: any = {
+      type: "FeatureCollection",
+      features: [entry.coverageShape]
+    };
 
-      p {
-        flex: 1 1 auto;
-      }
-    }
-  }
-`;
+    const b = bbox(workAreaGeoJSON);
 
-const Spacer = styled.div`
-  height: 1px;
-  margin: 32px 0;
-  background-color: ${(props) => props.theme.colors.bg[100]};
-`;
-
-const Table = styled.table`
-  min-width: 600px;
-
-  th {
-    text-align: right;
-    padding-right: 16px;
-    background-color: ${(props) => props.theme.colors.bg[50]};
-    border-right: 2px solid white;
-    border-bottom: 2px solid white;
-    border-top-left-radius: 16px;
-
-    &.empty {
-      background-color: transparent;
-      border-right: 0;
-    }
-  }
-
-  tr {
-    td {
-      background-color: ${(props) => props.theme.colors.bg[50]};
-      border-bottom: 2px solid white;
-      padding: 4px 8px;
-      &.title {
-        text-align: left;
-        font-weight: bold;
-      }
-
-      &.value {
-        text-align: right;
-        padding-right: 16px;
-        border-right: 2px solid white;
-      }
-    }
-
-    &:nth-of-type(even) {
-      td {
-        background-color: ${(props) => props.theme.colors.bg[100]};
-      }
-    }
-  }
-`;
-
-export const numberFormatter = new Intl.NumberFormat("nl-NL");
-function formatNumber(num: number, unit: string) {
-  if (num) {
-    return `${numberFormatter.format(num)}${unit}`;
-  }
-  return "";
+    let mapState: MapState = {
+      id: `${cov.id}`,
+      style: "mapbox://styles/mapbox/streets-v9",
+      viewport: {
+        width: 800,
+        height: 600,
+        bounds: [
+          [b[0], b[1]],
+          [b[2], b[3]]
+        ],
+        boundsOptions: { padding: 52 }
+      },
+      sources: [
+        {
+          id: `source${index}workarea`,
+          source: {
+            type: "geojson",
+            data: workAreaGeoJSON
+          }
+        },
+        {
+          id: `source${index}coverage`,
+          source: {
+            type: "geojson",
+            data: coverageGeoJSON
+          }
+        }
+      ],
+      layers: [
+        {
+          id: `layer${index}workarea`,
+          type: "fill",
+          source: `source${index}workarea`,
+          paint: {
+            "fill-color": "#f200f2",
+            "fill-opacity": 0.5
+          }
+        },
+        {
+          id: `layer${index}coverage`,
+          source: `source${index}coverage`,
+          type: "fill",
+          paint: {
+            "fill-color": "#0000f2",
+            "fill-opacity": 0.5
+          }
+        }
+      ]
+    };
+    result.push(mapState);
+  });
+  return result;
 }

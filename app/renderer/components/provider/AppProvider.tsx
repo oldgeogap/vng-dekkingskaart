@@ -45,11 +45,15 @@ export function AppProvider({ children }: AppProviderProps) {
     );
   }
 
-  const providerName = (id: number) => {
-    return providerOptions.find((option) => option.id == id)?.name || "";
+  const providerName = (id: string | number) => {
+    if (typeof id === "string") {
+      id = parseInt(id, 10);
+    }
+    let result = providerOptions.find((option) => option.id == id)?.name || "";
+    return result;
   };
 
-  const coverageTypeName = (id: number) => {
+  const coverageTypeName = (id: string | number) => {
     return coverageTypeOptions.find((option) => option.id == id)?.name || "";
   };
 

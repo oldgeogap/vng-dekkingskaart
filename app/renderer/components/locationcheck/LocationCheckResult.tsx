@@ -1,4 +1,5 @@
 import { IconButton } from "@chakra-ui/button";
+import { Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { VscChevronLeft, VscClose } from "react-icons/vsc";
@@ -13,19 +14,19 @@ export interface LocationCheckResultProps {
 }
 
 export function LocationCheckResult({ points, coverageFileIds }: LocationCheckResultProps) {
-  console.log("LOC CHECK RESULT", points, coverageFileIds);
   const router = useRouter();
   return (
     <>
       <Back>
-        <IconButton
+        <Button
           colorScheme="bg"
           aria-label="Terug"
-          icon={<VscClose />}
-          isRound
+          leftIcon={<VscClose />}
           size="sm"
           onClick={() => router.push("/locatiecheck")}
-        />
+        >
+          Sluiten
+        </Button>
       </Back>
       <LocationCheckResultPreload points={points} coverageFileIds={coverageFileIds} />
     </>
@@ -35,5 +36,6 @@ export function LocationCheckResult({ points, coverageFileIds }: LocationCheckRe
 const Back = styled.div`
   position: fixed;
   right: 10px;
-  top: 10px;
+  bottom: 10px;
+  z-index: 3;
 `;

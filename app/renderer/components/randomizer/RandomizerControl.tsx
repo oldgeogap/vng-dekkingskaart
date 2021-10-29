@@ -11,14 +11,14 @@ export interface RandomizerControlProps {}
 
 export function RandomizerControl({}: RandomizerControlProps) {
   const { points } = useRandomizer();
-  const { coverageSelection } = useAppState();
+  const { coverageSelection, municipalitySelection } = useAppState();
   const router = useRouter();
 
   const openWindow = () => {
     router.push(
-      `/locatiecheck/result/${points.map((point) => `${point.x},${point.y}`).join("x")}/${coverageSelection
-        .map((cov) => cov.id)
-        .join(",")}}`
+      `/randomizer/result/${points.map((point) => `${point.x},${point.y}`).join("x")}/${municipalitySelection
+        .map((muni) => muni.id)
+        .join(",")}/${coverageSelection.map((cov) => cov.id).join(",")}`
     );
   };
 
@@ -30,6 +30,9 @@ export function RandomizerControl({}: RandomizerControlProps) {
         </p>
         <p>
           <em>{coverageSelection.length}</em> {coverageSelection.length === 1 ? "dekkingskaart" : "dekkingskaarten"}
+        </p>
+        <p>
+          <em>{municipalitySelection.length}</em> {municipalitySelection.length === 1 ? "gemeente" : "gemeenten"}
         </p>
       </section>
       <section>
@@ -53,13 +56,16 @@ const ControlContainer = styled.aside`
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   section {
     flex: 0 0 50%;
     padding: 16px;
 
+    display: flex;
+
     p {
       margin: 0;
-      padding: 0;
+      padding: 0 16px 0 0;
       color: ${(props) => props.theme.colors.bg[300]};
       text-transform: uppercase;
       font-size: 12px;
@@ -69,6 +75,10 @@ const ControlContainer = styled.aside`
         font-style: normal;
         color: ${(props) => props.theme.colors.bg[50]};
       }
+    }
+
+    &:last-of-type {
+      justify-content: flex-end;
     }
   }
 `;
