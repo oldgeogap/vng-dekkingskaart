@@ -7,14 +7,17 @@ import { IconButton } from "@chakra-ui/button";
 import { VscClose } from "react-icons/vsc";
 import { RandomizerLocationForm } from "./RandomizerLocationForm";
 import { LocationPoint } from "renderer/types";
+import { useAppState } from "../provider/AppStateProvider";
+import { Button, Center } from "@chakra-ui/react";
+import { useReverseGeocoder } from "renderer/hooks/useReverseGeocoder";
 
 export interface RandomizerLocationSelectionProps {}
 
 export function RandomizerLocationSelection({}: RandomizerLocationSelectionProps) {
-  const { points, setPoints } = useRandomizer();
-
+  const { randomPointSelection, randomPointDeselect } = useAppState();
+  const { setHover } = useRandomizer();
   const removePoint = (point: LocationPoint) => {
-    setPoints((old) => old.filter((p) => p.x !== point.x && p.y !== point.y));
+    randomPointDeselect([point]);
   };
 
   return (
@@ -26,8 +29,8 @@ export function RandomizerLocationSelection({}: RandomizerLocationSelectionProps
         </Filters>
         <Selection>
           <PointList>
-            {points.map((p, index) => (
-              <li key={index}>
+            {randomPointSelection.map((p, index) => (
+              <li key={index} onMouseOver={() => setHover(p)} onMouseLeave={() => setHover(null)}>
                 <Coords>
                   {p.x.toFixed(7)} <span>,</span> {p.y.toFixed(7)}
                 </Coords>
@@ -43,6 +46,19 @@ export function RandomizerLocationSelection({}: RandomizerLocationSelectionProps
               </li>
             ))}
           </PointList>
+          {randomPointSelection.length > 0 && (
+            <Center mt={12}>
+              <Button
+                size="xs"
+                variant="ghost"
+                onClick={() => {
+                  randomPointDeselect(randomPointSelection);
+                }}
+              >
+                alles verwijderen
+              </Button>
+            </Center>
+          )}
         </Selection>
       </FilterSelection>
     </RandomizerLocationSelectionContainer>
@@ -62,12 +78,16 @@ const PointList = styled.ul`
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid ${(props) => props.theme.colors.bg[100]};
-
   li {
+    border-left: 2px solid transparent;
     display: flex;
     justify-content: space-between;
-    padding: 4px 8px 4px 16px;
+    padding: 4px 8px 4px 14px;
     align-items: center;
+
+    &:hover {
+      border-left: 2px solid ${(props) => props.theme.colors.brand[400]};
+    }
   }
 `;
 

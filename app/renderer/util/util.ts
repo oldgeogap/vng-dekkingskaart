@@ -47,3 +47,26 @@ export function parsePointString(s: string): [number, number] | null {
 
   return null;
 }
+
+export function msToReadableTime(ms: number) {
+  let seconds = Math.floor(ms / 1000);
+  let minutes = Math.floor(seconds / 60);
+  let hours = Math.floor(minutes / 60);
+  let days = Math.floor(hours / 24);
+
+  let readable = "";
+  if (days > 0) {
+    readable += `${days}d `;
+  }
+  if (hours > 0) {
+    readable += `${hours % 24}u `;
+  }
+  if (minutes > 0) {
+    readable += `${minutes % 60}m `;
+  }
+  if (seconds > 0) {
+    readable += `${seconds % 60}s `;
+  }
+
+  return readable;
+}

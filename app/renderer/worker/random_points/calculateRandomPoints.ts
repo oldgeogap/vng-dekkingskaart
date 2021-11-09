@@ -20,6 +20,7 @@ export async function calculateRandomPoints({ count, municipalityIds }: Calculat
   let points: LocationPoint[] = [];
 
   let municipalityShapes = await getMunicipalityShapes(municipalityIds);
+
   let workArea = getWorkarea(municipalityShapes);
 
   var bbox = turf.bbox(workArea);

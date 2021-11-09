@@ -3,4 +3,5 @@ export type LocationPoint = {
   x: number;
   y: number;
   hasCoverage?: boolean;
+  displayName?: string;
 };

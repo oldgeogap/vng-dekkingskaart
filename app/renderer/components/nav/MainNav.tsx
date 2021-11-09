@@ -42,9 +42,9 @@ export function MainNav({}: MainNavProps) {
         </Tab>
       </Tabs>
       <SideNav>
-        {/* <Link href="/instellingen">
-          <IconButton aria-label="Instellingen" icon={<IoSettingsOutline />} size="sm" isRound variant="ghost" />
-        </Link> */}
+        <Link href="/documentatie">
+          <a>Documentatie</a>
+        </Link>
       </SideNav>
     </NavContainer>
   );
@@ -108,5 +108,12 @@ const Tab = styled.li`
 const SideNav = styled.aside`
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 20px;
+
+  a {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    color: ${(props) => props.theme.colors.bg[300]};
+  }
 `;

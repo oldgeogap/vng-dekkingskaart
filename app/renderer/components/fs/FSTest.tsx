@@ -12,7 +12,6 @@ export default function FSTest({}: FSTestProps) {
   React.useEffect(() => {
     if (ipcRenderer) {
       ipcRenderer.on("files-selected", (event, data) => {
-        console.log(data);
         setDoFile(false);
         setResult(data);
       });
@@ -21,7 +20,6 @@ export default function FSTest({}: FSTestProps) {
 
   React.useEffect(() => {
     if (doFile && ipcRenderer) {
-      console.log("Sending");
       ipcRenderer.send("browse-files", "some data");
     }
   }, [doFile]);

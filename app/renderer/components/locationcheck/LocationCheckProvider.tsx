@@ -1,5 +1,6 @@
 import * as React from "react";
 import { LocationPoint } from "renderer/types";
+import { useAppState } from "../provider/AppStateProvider";
 
 export interface LocationCheckProviderProps {
   children: React.ReactNode;
@@ -7,26 +8,26 @@ export interface LocationCheckProviderProps {
 
 export interface ILocationCheckContext {
   preset?: LocationPoint;
-  points: LocationPoint[];
   setPreset: React.Dispatch<React.SetStateAction<LocationPoint>>;
-  setPoints: React.Dispatch<React.SetStateAction<LocationPoint[]>>;
+  hover?: LocationPoint;
+  setHover: React.Dispatch<React.SetStateAction<LocationPoint>>;
 }
 
 const defaultLocationCheckContact: ILocationCheckContext = {
   preset: undefined,
-  points: [],
-  setPoints: () => {},
-  setPreset: () => {}
+  setPreset: () => {},
+  hover: undefined,
+  setHover: () => {}
 };
 
 export const LocationCheckContext = React.createContext<ILocationCheckContext>(defaultLocationCheckContact);
 
 export function LocationCheckProvider({ children }: LocationCheckProviderProps) {
   const [preset, setPreset] = React.useState<LocationPoint | null>(null);
-  const [points, setPoints] = React.useState<LocationPoint[]>([]);
+  const [hover, setHover] = React.useState<LocationPoint | null>(null);
 
   return (
-    <LocationCheckContext.Provider value={{ preset, points, setPoints, setPreset }}>
+    <LocationCheckContext.Provider value={{ preset, setPreset, hover, setHover }}>
       {children}
     </LocationCheckContext.Provider>
   );

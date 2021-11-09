@@ -30,7 +30,6 @@ export function useProcessFile(): UseProcessFileReturn {
   React.useEffect(() => {
     if (ipcRenderer) {
       const onProcessResult = (event, data) => {
-        console.log("Process result", data);
         setResult(data);
         setProcessing(null);
       };
@@ -43,7 +42,6 @@ export function useProcessFile(): UseProcessFileReturn {
 
   React.useEffect(() => {
     if (processing && ipcRenderer) {
-      console.log("Sending paths", processing);
       ipcRenderer.send(ipcEvents.PROCESS_FILES, processing);
     }
   }, [processing]);

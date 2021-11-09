@@ -25,7 +25,6 @@ if (ipcRenderer) {
 }
 
 function onLoadResult(event, data) {
-  console.log("Job Onload result");
   if (_job) {
     _job.resolve(data);
   }

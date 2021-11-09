@@ -30,10 +30,6 @@ export function LocationCheckResultPrecalculate({ points, coverageFiles }: Locat
     return coverageFiles.find((cf) => `${cf.id}` === id);
   };
 
-  if (!loading) {
-    console.log(entries);
-  }
-
   return (
     <>
       <AnimatePresence>

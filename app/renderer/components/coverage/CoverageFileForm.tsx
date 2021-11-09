@@ -61,7 +61,6 @@ export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProp
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
     if (!data.id) {
       let fileID = await addCoverageFile({
         provider: data.provider,

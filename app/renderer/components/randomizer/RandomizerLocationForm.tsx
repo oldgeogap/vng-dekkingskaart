@@ -24,8 +24,7 @@ type Inputs = {
 };
 
 export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
-  const { setPoints } = useRandomizer();
-  const { municipalitySelection } = useAppState();
+  const { municipalitySelection, randomPointSelect } = useAppState();
   const { points, loading, getRandomPoints } = useRandomPoints();
   const disabled = municipalitySelection.length === 0;
 
@@ -40,7 +39,7 @@ export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
 
   React.useEffect(() => {
     if (points) {
-      setPoints((p) => [...p, ...points]);
+      randomPointSelect(points);
       reset();
     }
   }, [points]);
@@ -59,7 +58,7 @@ export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
           <FormLabel>Punten toevoegen</FormLabel>
           <InputGroup>
             <NumberInput size="sm" isDisabled={disabled}>
-              <NumberInputField {...register("count", { required: true, valueAsNumber: true, min: 1, max: 20 })} />
+              <NumberInputField {...register("count", { required: true, valueAsNumber: true, min: 1, max: 35 })} />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />

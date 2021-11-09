@@ -1,4 +1,4 @@
-import { IconButton } from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/react";
 import * as React from "react";
 import { styled } from "renderer/ui/theme";
 import { findOptionName, formatTimestamp, formatTimestampDistance } from "renderer/util";
@@ -6,6 +6,7 @@ import { CoverageFile, db } from "../../db";
 import { DeleteFileButton } from "./DeleteFileButton";
 import { Option } from "renderer/components/options";
 import { VscEdit, VscTrash } from "react-icons/vsc";
+import { CoverageCalculateModal } from "./CoverageCalculateModal";
 
 export interface CoverageFileRowProps {
   file: CoverageFile;
@@ -26,6 +27,13 @@ export function CoverageFileRow({ file, providerOptions, coverageTypeOptions, on
       <td className="created">
         <label>{formatTimestampDistance(file.created_at)}</label>
         <p>{formatTimestamp(file.created_at)}</p>
+      </td>
+      <td>
+        {file.coveragePercent ? (
+          <span>{file.coveragePercent.toFixed(2)}%</span>
+        ) : (
+          <CoverageCalculateModal file={file} />
+        )}
       </td>
 
       <td className="actions">

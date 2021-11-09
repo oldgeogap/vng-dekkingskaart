@@ -3,17 +3,19 @@ import { Filters, FilterSelection, Selection } from "renderer/ui/selection";
 import { styled } from "renderer/ui/theme";
 import { LocationPointForm } from "./LocationPointForm";
 import { useLocationCheck } from "./LocationCheckProvider";
-import { IconButton } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { VscClose } from "react-icons/vsc";
 import { LocationPoint } from "renderer/types";
+import { useAppState } from "../provider/AppStateProvider";
+import { Center } from "@chakra-ui/react";
 
 export interface LocationSelectionProps {}
 
 export function LocationSelection({}: LocationSelectionProps) {
-  const { points, setPoints } = useLocationCheck();
-
+  const { pointSelection, pointDeselect } = useAppState();
+  const { setHover } = useLocationCheck();
   const removePoint = (point: LocationPoint) => {
-    setPoints((old) => old.filter((p) => p.x !== point.x && p.y !== point.y));
+    pointDeselect([point]);
   };
 
   return (
@@ -25,8 +27,8 @@ export function LocationSelection({}: LocationSelectionProps) {
         </Filters>
         <Selection>
           <PointList>
-            {points.map((p, index) => (
-              <li key={index}>
+            {pointSelection.map((p, index) => (
+              <li key={index} onMouseOver={() => setHover(p)} onMouseLeave={() => setHover(null)}>
                 <Coords>
                   {p.x.toFixed(7)} <span>,</span> {p.y.toFixed(7)}
                 </Coords>
@@ -42,6 +44,19 @@ export function LocationSelection({}: LocationSelectionProps) {
               </li>
             ))}
           </PointList>
+          {pointSelection.length > 0 && (
+            <Center mt={12}>
+              <Button
+                size="xs"
+                variant="ghost"
+                onClick={() => {
+                  pointDeselect(pointSelection);
+                }}
+              >
+                alles verwijderen
+              </Button>
+            </Center>
+          )}
         </Selection>
       </FilterSelection>
     </LocationSelectionContainer>
@@ -61,12 +76,16 @@ const PointList = styled.ul`
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid ${(props) => props.theme.colors.bg[100]};
-
   li {
+    border-left: 2px solid transparent;
     display: flex;
     justify-content: space-between;
-    padding: 4px 8px 4px 16px;
+    padding: 4px 8px 4px 14px;
     align-items: center;
+
+    &:hover {
+      border-left: 2px solid ${(props) => props.theme.colors.brand[400]};
+    }
   }
 `;
 

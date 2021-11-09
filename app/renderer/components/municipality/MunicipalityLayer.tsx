@@ -80,7 +80,7 @@ export function MunicipalityLayer({ showMode }: MunicipalityLayerProps) {
         id={SOURCE_ID}
         data={"/data/gemeenten.geojson"}
         sourceOptions={{
-          promoteId: "code"
+          promoteId: "id"
         }}
         fillPaint={fillPaint}
         fillOnMouseEnter={(e) => {
@@ -114,7 +114,7 @@ export function MunicipalityLayer({ showMode }: MunicipalityLayerProps) {
       />
       {!showMode && (
         <MapHover layerId={`${SOURCE_ID}-fill`} source={SOURCE_ID} sourceLayer={undefined}>
-          {(info) => (info ? <MapHoverPopup hoverInfo={info} title={info.feature.properties.gemeentenaam} /> : null)}
+          {(info) => (info ? <MapHoverPopup hoverInfo={info} title={info.feature.properties.name} /> : null)}
         </MapHover>
       )}
     </>

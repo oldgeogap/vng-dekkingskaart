@@ -32,7 +32,6 @@ class VngDB extends Dexie {
     this.on("ready", () => {
       return this.municipality.count((count) => {
         if (count === 0) {
-          console.log("Populating municipalities");
           return populateMunicipalities(this);
         }
       });

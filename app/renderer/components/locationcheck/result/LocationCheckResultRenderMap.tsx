@@ -33,8 +33,6 @@ export function LocationCheckResultRenderMap({ nr, points }: LocationCheckResult
     };
   }, [points]);
 
-  console.log(geoJSON);
-
   return (
     <RenderMapContainer>
       <MapContainer>

@@ -40,7 +40,7 @@ export function DragPoint({ onDragEnd }: DragPointProps) {
       const coords = e.lngLat;
 
       let msg = `Longitude: ${coords.lng}<br />Latitude: ${coords.lat}`;
-      console.log(msg);
+
       onDragEnd(coords.lng, coords.lat);
       canvas.style.cursor = "";
       // Unbind mouse/touch events

@@ -3,6 +3,7 @@ import * as turf from "@turf/turf";
 import { Feature, Polygon, MultiPolygon } from "@turf/turf";
 import booleanIntersects from "@turf/boolean-intersects";
 import { getMunicipalityShapes, getWorkarea } from "../util";
+import { logToFile } from "../util/log";
 export type CoveragePercentArguments = {
   id: string;
   coverageFilePath: string;
@@ -43,6 +44,9 @@ export async function calculateCoveragePercent({
 
   let fc = turf.combine(turf.featureCollection(coverageFeatures));
   let coverageFeaturesCombined = fc.features[0] as Feature<MultiPolygon>;
+
+  // logToFile(coverageFeaturesCombined, "coverage", "geojson");
+  // logToFile(workArea, "workarea", "geojson");
   coverageShape = turf.intersect(coverageFeaturesCombined, workArea);
 
   let coverageArea = turf.area(coverageShape);

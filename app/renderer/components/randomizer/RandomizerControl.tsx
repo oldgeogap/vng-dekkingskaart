@@ -10,15 +10,17 @@ import { useRandomizer } from "./RandomizerProvider";
 export interface RandomizerControlProps {}
 
 export function RandomizerControl({}: RandomizerControlProps) {
-  const { points } = useRandomizer();
+  const { randomPointSelection } = useAppState();
   const { coverageSelection, municipalitySelection } = useAppState();
   const router = useRouter();
 
   const openWindow = () => {
     router.push(
-      `/randomizer/result/${points.map((point) => `${point.x},${point.y}`).join("x")}/${municipalitySelection
-        .map((muni) => muni.id)
-        .join(",")}/${coverageSelection.map((cov) => cov.id).join(",")}`
+      `/randomizer/result/${randomPointSelection
+        .map((point) => `${point.x},${point.y}`)
+        .join("x")}/${municipalitySelection.map((muni) => muni.id).join(",")}/${coverageSelection
+        .map((cov) => cov.id)
+        .join(",")}`
     );
   };
 
@@ -26,7 +28,7 @@ export function RandomizerControl({}: RandomizerControlProps) {
     <ControlContainer>
       <section>
         <p>
-          <em>{points.length}</em> {points.length === 1 ? "punt" : "punten"}
+          <em>{randomPointSelection.length}</em> {randomPointSelection.length === 1 ? "punt" : "punten"}
         </p>
         <p>
           <em>{coverageSelection.length}</em> {coverageSelection.length === 1 ? "dekkingskaart" : "dekkingskaarten"}
@@ -40,7 +42,7 @@ export function RandomizerControl({}: RandomizerControlProps) {
           colorScheme="brand"
           rightIcon={<VscRemoteExplorer />}
           onClick={openWindow}
-          isDisabled={points.length === 0 || coverageSelection.length === 0}
+          isDisabled={randomPointSelection.length === 0 || coverageSelection.length === 0}
         >
           Resultaten ophalen
         </Button>

@@ -32,7 +32,6 @@ export function CoverageHome({}: CoverageHomeProps) {
 
   const isOpen = targetFile !== null;
 
-  console.log("Tick", n++);
   return (
     <CoverageHomeContainer>
       <ControlBar>
@@ -74,6 +73,7 @@ export function CoverageHome({}: CoverageHomeProps) {
               >
                 aangemaakt
               </SortHeader>
+              <th>Dekking</th>
               <th>acties</th>
             </tr>
           </thead>
@@ -85,7 +85,6 @@ export function CoverageHome({}: CoverageHomeProps) {
                 providerOptions={providerOptions}
                 coverageTypeOptions={coverageTypeOptions}
                 onEdit={(file: CoverageFile) => {
-                  console.log("on edit?", file);
                   setTargetFile(file);
                 }}
               />

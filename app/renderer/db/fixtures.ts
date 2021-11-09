@@ -13,4 +13,6 @@ export const coverageTypeFixture: CoverageType[] = [
   { name: "Data hoog" }
 ];
 
-export const appStateFixture: AppState[] = [{ id: 1, municipalitySelection: [], coverageFileSelection: [] }];
+export const appStateFixture: AppState[] = [
+  { id: 1, municipalitySelection: [], coverageFileSelection: [], pointSelection: [], randomPointSelection: [] }
+];

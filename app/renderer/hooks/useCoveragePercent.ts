@@ -48,18 +48,24 @@ export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
     if (ipcRenderer) {
       const onResult = (event, resp) => {
         console.log("onResult", resp);
-        let data = resp.result;
-        setResult((old) => {
-          let entry = old.find((entry) => entry.id === data.id);
-          if (entry) {
-            entry.loaded = true;
-            entry.coveragePercent = data.coveragePercent;
-            entry.coverageShape = data.coverageShape;
-            entry.municipalityShapes = data.municipalityShapes;
-            return [...old.filter((o) => o.id !== data.id), entry];
-          }
-          return old;
-        });
+        if (resp.error) {
+          console.error(resp.error);
+          throw Error(resp.error.message);
+        }
+        if (resp.result) {
+          let data = resp.result;
+          setResult((old) => {
+            let entry = old.find((entry) => entry.id === data.id);
+            if (entry) {
+              entry.loaded = true;
+              entry.coveragePercent = data.coveragePercent;
+              entry.coverageShape = data.coverageShape;
+              entry.municipalityShapes = data.municipalityShapes;
+              return [...old.filter((o) => o.id !== data.id), entry];
+            }
+            return old;
+          });
+        }
       };
 
       ipcRenderer.on("to-renderer", onResult);

@@ -20,13 +20,11 @@ export function MapClick({ layerId, source, sourceLayer, children }: MapClickPro
 
   React.useEffect(() => {
     const mouseClick = (e: any) => {
-      console.log("mouse click", e);
       let features = map.queryRenderedFeatures(e.point, { layers: [layerId] });
 
       if (features.length) {
         map.getCanvas().style.cursor = "pointer";
         let mapboxFeature: mapboxgl.MapboxGeoJSONFeature = features[0];
-        console.log("mapbox feature", mapboxFeature);
 
         map.setFeatureState({ source, sourceLayer, id: mapboxFeature.properties.id }, { active: true });
 

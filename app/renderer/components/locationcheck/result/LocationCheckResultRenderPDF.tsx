@@ -83,6 +83,7 @@ export function LocationCheckResultRenderPDF({
         let [entryIndex, pointIndex] = image.id.split("x").map((s) => parseInt(s, 10));
         let entry = entries[entryIndex];
         let point = entry.points[pointIndex];
+        let pointName = points[pointIndex];
         let { cf, index } = covFile(entry.id);
         return (
           <VNGPage key={image.id}>
@@ -91,6 +92,7 @@ export function LocationCheckResultRenderPDF({
                 {providerName(cf.provider)} - {coverageTypeName(cf.coverage_type)} - {cf.year}
               </Header>
               <BoolLabel yes={!!point.hasCoverage}>Dekking op geselecteerde locatie</BoolLabel>
+              {pointName.displayName && <Text style={{ fontSize: 12 }}>{pointName.displayName}</Text>}
               <SubHeader>
                 Willekeurige locatie:{"  "}
                 <Link src={`https://www.google.com/maps/@${point.y},${point.x},14z`}>

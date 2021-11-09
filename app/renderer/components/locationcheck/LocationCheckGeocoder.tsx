@@ -1,21 +1,23 @@
 import * as React from "react";
 import { styled } from "renderer/ui/theme";
 import { Geocoder } from "../map/Geocoder";
-import { useLocationCheck } from "./LocationCheckProvider";
+import { useAppState } from "../provider/AppStateProvider";
 
 export interface LocationCheckGeocoderProps {}
 
 export function LocationCheckGeocoder({}: LocationCheckGeocoderProps) {
-  const { setPreset } = useLocationCheck();
+  const { pointSelect } = useAppState();
   return (
     <GeocoderContainer>
       <Geocoder
         onResult={(r) => {
           if (r.coordinates) {
-            setPreset({
-              x: r.coordinates[0],
-              y: r.coordinates[1]
-            });
+            pointSelect([
+              {
+                x: r.coordinates[0],
+                y: r.coordinates[1]
+              }
+            ]);
           }
         }}
       />

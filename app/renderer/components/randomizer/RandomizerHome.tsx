@@ -5,6 +5,8 @@ import { CoverageSelection } from "../coverage/CoverageSelection";
 import { MapRenderer } from "../map/MapRenderer";
 import { MunicipalityLayer } from "../municipality/MunicipalityLayer";
 import { MunicipalitySelection } from "../municipality/MunicipalitySelection";
+import { useApp } from "../provider/AppProvider";
+import { useAppState } from "../provider/AppStateProvider";
 import { RandomizerControl } from "./RandomizerControl";
 import { RandomizerLayer } from "./RandomizerLayer";
 import { RandomizerLocationSelection } from "./RandomizerLocationSelection";
@@ -22,7 +24,7 @@ export function RandomizerHome() {
 
 export function RandomizerHomeInner({}: RandomizerHomeProps) {
   const [coverageFileVisible, setCoverageFileVisible] = React.useState<number[]>([]);
-  const { points } = useRandomizer();
+  const { randomPointSelection } = useAppState();
   return (
     <RandomizerHomeContainer>
       <Municipalities>
@@ -40,7 +42,7 @@ export function RandomizerHomeInner({}: RandomizerHomeProps) {
             [8.007755687486053, 53.65674661767193]
           ]}
         >
-          <MunicipalityLayer showMode={points && points.length > 0} />
+          <MunicipalityLayer showMode={randomPointSelection && randomPointSelection.length > 0} />
           <RandomizerLayer />
           <CoverageFileLayers visibleIDS={coverageFileVisible} />
         </MapRenderer>

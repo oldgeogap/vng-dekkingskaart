@@ -1,26 +1,28 @@
 import * as React from "react";
 import { useRandomizer } from "./RandomizerProvider";
-import { Layer, Feature } from "react-mapbox-gl";
+import { Layer, Feature, Marker } from "react-mapbox-gl";
 import { MapBounds } from "../map/MapBounds";
 import { LocationPoint } from "renderer/types";
 import { MapHoverPopup } from "../map/MapHoverPopup";
 import { MapClick } from "../map/MapClick";
 import { Button } from "@chakra-ui/button";
+import { useAppState } from "../provider/AppStateProvider";
+import { styled } from "renderer/ui/theme";
 
 export interface RandomizerLayerProps {}
 
 const _layer_id = "randomizer-layer-points";
 
 export function RandomizerLayer({}: RandomizerLayerProps) {
-  const [activePoint, setActivePoint] = React.useState<LocationPoint | null>(null);
-  const { points, setPoints } = useRandomizer();
+  const { hover } = useRandomizer();
+  const { randomPointDeselect, randomPointSelection } = useAppState();
 
   const removePoint = (x: number, y: number) => {
-    setPoints((old) => old.filter((p) => p.x !== x && p.y !== y));
+    randomPointDeselect([{ x, y }]);
   };
 
   const hasPoint = (x: number, y: number) => {
-    let f = points.findIndex((p) => p.x === x && p.y === y);
+    let f = randomPointSelection.findIndex((p) => p.x === x && p.y === y);
     return f !== -1;
   };
 
@@ -36,7 +38,7 @@ export function RandomizerLayer({}: RandomizerLayerProps) {
           "circle-radius": 4
         }}
       >
-        {points.map((point, i) => (
+        {randomPointSelection.map((point, i) => (
           <Feature
             coordinates={[point.x, point.y]}
             key={i}
@@ -47,7 +49,9 @@ export function RandomizerLayer({}: RandomizerLayerProps) {
           />
         ))}
       </Layer>
-      {points && points.length > 0 && <MapBounds points={points.map((p) => [p.x, p.y])} />}
+      {randomPointSelection && randomPointSelection.length > 0 && (
+        <MapBounds points={randomPointSelection.map((p) => [p.x, p.y])} />
+      )}
 
       <MapClick source={_layer_id} layerId={_layer_id}>
         {(info) => {
@@ -71,6 +75,20 @@ export function RandomizerLayer({}: RandomizerLayerProps) {
           );
         }}
       </MapClick>
+      {hover && (
+        <Marker coordinates={[hover.x, hover.y]} anchor="center" style={{ width: "21px", height: "21px" }}>
+          <MyMarker />
+        </Marker>
+      )}
     </>
   );
 }
+
+const MyMarker = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 6px solid red;
+  border-radius: 50%;
+
+  opacity: 0.6;
+`;

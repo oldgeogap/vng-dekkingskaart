@@ -31,7 +31,7 @@ export function MapHover({ layerId, source, sourceLayer, children }: MapHoverPro
         //dont do anything if it's the same
         if (_hoverStateId === feature.id) return;
 
-        if (_hoverStateId && _hoverStateId) {
+        if (_hoverStateId) {
           map.setFeatureState({ source, sourceLayer, id: _hoverStateId }, { hover: false });
         }
         _hoverStateId = feature.id;

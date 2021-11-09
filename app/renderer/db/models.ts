@@ -1,3 +1,5 @@
+import { LocationPoint } from "renderer/types";
+
 export interface Provider {
   id?: number;
   name: string;
@@ -18,6 +20,7 @@ export interface CoverageFile {
   year: string;
   created_at: number;
   status: CoverageFileStatus;
+  coveragePercent?: number;
   importPaths?: string;
   path?: string;
   error?: string | null;
@@ -32,4 +35,6 @@ export interface AppState {
   id?: number;
   municipalitySelection: Municipality[];
   coverageFileSelection: CoverageFile[];
+  pointSelection: LocationPoint[];
+  randomPointSelection: LocationPoint[];
 }

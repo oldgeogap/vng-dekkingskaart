@@ -7,7 +7,7 @@ export async function getMunicipalityShapes(ids: string[]) {
   let muniJSON = await fetch("/data/gemeenten.geojson").then((res) => res.json());
 
   for (let i = 0, n = muniJSON.features.length; i < n; i++) {
-    if (ids.includes(muniJSON.features[i].properties.code)) {
+    if (ids.includes(muniJSON.features[i].properties.id)) {
       municipalityShapes.push(muniJSON.features[i]);
     }
     if (municipalityShapes.length === totalMunicipalities) {
@@ -16,4 +16,10 @@ export async function getMunicipalityShapes(ids: string[]) {
   }
 
   return municipalityShapes;
+}
+
+export async function getCountryShape() {
+  let countryJSON = await fetch("/data/gemeentenmerged.geojson").then((res) => res.json());
+
+  return countryJSON;
 }

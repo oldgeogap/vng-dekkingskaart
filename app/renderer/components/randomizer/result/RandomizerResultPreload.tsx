@@ -1,5 +1,6 @@
 import * as React from "react";
 import { CoverageFile, db, Municipality } from "renderer/db";
+import { useReverseGeocoder } from "renderer/hooks/useReverseGeocoder";
 import { LocationPoint } from "renderer/types";
 import { RandomizerResultPrecalculate } from "./RandomizerResultPrecalculate";
 
@@ -12,7 +13,8 @@ export interface RandomizerResultPreloadProps {
 export function RandomizerResultPreload({ points, municipalityIds, coverageFileIds }: RandomizerResultPreloadProps) {
   const [municipalities, setMunicipalities] = React.useState<Municipality[]>([]);
   const [coverageFiles, setCoverageFiles] = React.useState<CoverageFile[]>([]);
-
+  const [enhancedPoints, setEnhancedPoints] = React.useState<LocationPoint[] | null>(null);
+  const { result, loading, error } = useReverseGeocoder({ points });
   React.useEffect(() => {
     const doLoad = async (coverageFileIds: number[]) => {
       let munis = await db.municipality.bulkGet(municipalityIds);
@@ -24,9 +26,28 @@ export function RandomizerResultPreload({ points, municipalityIds, coverageFileI
     doLoad(coverageFileIds);
   }, [coverageFileIds]);
 
-  if (coverageFiles.length === 0) {
+  React.useEffect(() => {
+    if (result) {
+      setEnhancedPoints(
+        points.map((p, n) => {
+          return {
+            ...p,
+            displayName: result[n] ? result[n].weergavenaam : ""
+          };
+        })
+      );
+    }
+  }, [result]);
+
+  if (coverageFiles.length === 0 || enhancedPoints === null) {
     return <div>Preloading</div>;
   }
 
-  return <RandomizerResultPrecalculate points={points} municipalities={municipalities} coverageFiles={coverageFiles} />;
+  return (
+    <RandomizerResultPrecalculate
+      points={enhancedPoints}
+      municipalities={municipalities}
+      coverageFiles={coverageFiles}
+    />
+  );
 }

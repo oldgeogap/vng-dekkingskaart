@@ -10,13 +10,12 @@ import { useLocationCheck } from "./LocationCheckProvider";
 export interface LocationCheckControlProps {}
 
 export function LocationCheckControl({}: LocationCheckControlProps) {
-  const { points } = useLocationCheck();
-  const { coverageSelection } = useAppState();
+  const { coverageSelection, pointSelection } = useAppState();
   const router = useRouter();
 
   const openWindow = () => {
     router.push(
-      `/locatiecheck/result/${points.map((point) => `${point.x},${point.y}`).join("x")}/${coverageSelection
+      `/locatiecheck/result/${pointSelection.map((point) => `${point.x},${point.y}`).join("x")}/${coverageSelection
         .map((cov) => cov.id)
         .join(",")}}`
     );
@@ -26,7 +25,7 @@ export function LocationCheckControl({}: LocationCheckControlProps) {
     <ControlContainer>
       <section>
         <p>
-          <em>{points.length}</em> {points.length === 1 ? "punt" : "punten"}
+          <em>{pointSelection.length}</em> {pointSelection.length === 1 ? "punt" : "punten"}
         </p>
         <p>
           <em>{coverageSelection.length}</em> {coverageSelection.length === 1 ? "dekkingskaart" : "dekkingskaarten"}
@@ -37,7 +36,7 @@ export function LocationCheckControl({}: LocationCheckControlProps) {
           colorScheme="brand"
           rightIcon={<VscRemoteExplorer />}
           onClick={openWindow}
-          isDisabled={points.length === 0 || coverageSelection.length === 0}
+          isDisabled={pointSelection.length === 0 || coverageSelection.length === 0}
         >
           Resultaten ophalen
         </Button>

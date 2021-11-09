@@ -7,26 +7,26 @@ export interface RandomizerProviderProps {
 
 export interface IRandomizerContext {
   preset?: LocationPoint;
-  points: LocationPoint[];
   setPreset: React.Dispatch<React.SetStateAction<LocationPoint>>;
-  setPoints: React.Dispatch<React.SetStateAction<LocationPoint[]>>;
+  hover?: LocationPoint;
+  setHover: React.Dispatch<React.SetStateAction<LocationPoint>>;
 }
 
 const defaultRandomizerContact: IRandomizerContext = {
   preset: undefined,
-  points: [],
-  setPoints: () => {},
-  setPreset: () => {}
+  setPreset: () => {},
+  hover: undefined,
+  setHover: () => {}
 };
 
 export const RandomizerContext = React.createContext<IRandomizerContext>(defaultRandomizerContact);
 
 export function RandomizerProvider({ children }: RandomizerProviderProps) {
   const [preset, setPreset] = React.useState<LocationPoint | null>(null);
-  const [points, setPoints] = React.useState<LocationPoint[]>([]);
+  const [hover, setHover] = React.useState<LocationPoint | null>(null);
 
   return (
-    <RandomizerContext.Provider value={{ preset, points, setPoints, setPreset }}>{children}</RandomizerContext.Provider>
+    <RandomizerContext.Provider value={{ preset, setPreset, hover, setHover }}>{children}</RandomizerContext.Provider>
   );
 }
 

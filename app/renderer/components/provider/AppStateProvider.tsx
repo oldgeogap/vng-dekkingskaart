@@ -1,4 +1,5 @@
 import * as React from "react";
+import { LocationPoint } from "renderer/types";
 import { AppState, db, Municipality, CoverageFile } from "../../db";
 export interface IAppStateProvider {
   municipalitySelection: Municipality[];
@@ -8,6 +9,14 @@ export interface IAppStateProvider {
   coverageSelection: CoverageFile[];
   coverageSelect: (cov: CoverageFile[]) => void;
   coverageDeselect: (ids: number[]) => void;
+
+  pointSelection: LocationPoint[];
+  pointSelect: (points: LocationPoint[]) => void;
+  pointDeselect: (points: LocationPoint[]) => void;
+
+  randomPointSelection: LocationPoint[];
+  randomPointSelect: (points: LocationPoint[]) => void;
+  randomPointDeselect: (points: LocationPoint[]) => void;
 }
 
 const defaultContext: IAppStateProvider = {
@@ -17,7 +26,15 @@ const defaultContext: IAppStateProvider = {
 
   coverageSelection: [],
   coverageSelect: (cov: CoverageFile[]) => null,
-  coverageDeselect: (ids: number[]) => null
+  coverageDeselect: (ids: number[]) => null,
+
+  pointSelection: [],
+  pointSelect: (points: LocationPoint[]) => null,
+  pointDeselect: (points: LocationPoint[]) => null,
+
+  randomPointSelection: [],
+  randomPointSelect: (points: LocationPoint[]) => null,
+  randomPointDeselect: (points: LocationPoint[]) => null
 };
 
 const AppStateProviderContext = React.createContext<IAppStateProvider>(defaultContext);
@@ -31,6 +48,8 @@ const APPSTATE_ID = 1;
 export function AppStateProvider({ children }: AppStateProviderProps) {
   const [municipalitySelection, setMunicipalitySelection] = React.useState<Municipality[]>([]);
   const [coverageSelection, setCoverageSelection] = React.useState<CoverageFile[]>([]);
+  const [pointSelection, setPointSelection] = React.useState<LocationPoint[]>([]);
+  const [randomPointSelection, setRandomPointSelection] = React.useState<LocationPoint[]>([]);
   const seedHasRun = React.useRef(false);
   //seed
   React.useEffect(() => {
@@ -39,6 +58,8 @@ export function AppStateProvider({ children }: AppStateProviderProps) {
       if (result) {
         setMunicipalitySelection(result.municipalitySelection);
         setCoverageSelection(result.coverageFileSelection);
+        setPointSelection(result.pointSelection || []);
+        setRandomPointSelection(result.randomPointSelection || []);
       }
       seedHasRun.current = true;
     };
@@ -56,6 +77,18 @@ export function AppStateProvider({ children }: AppStateProviderProps) {
       db.appstate.update(APPSTATE_ID, { coverageFileSelection: coverageSelection });
     }
   }, [coverageSelection]);
+
+  React.useEffect(() => {
+    if (seedHasRun.current) {
+      db.appstate.update(APPSTATE_ID, { pointSelection });
+    }
+  }, [pointSelection]);
+
+  React.useEffect(() => {
+    if (seedHasRun.current) {
+      db.appstate.update(APPSTATE_ID, { randomPointSelection });
+    }
+  }, [randomPointSelection]);
 
   const municipalitySelect = (munis: Municipality[]) => {
     let ids = munis.map((m) => m.id);
@@ -75,6 +108,22 @@ export function AppStateProvider({ children }: AppStateProviderProps) {
     setCoverageSelection((c) => c.filter((m) => ids.findIndex((id) => id === m.id) === -1));
   };
 
+  const pointSelect = (points: LocationPoint[]) => {
+    setPointSelection((c) => [...c, ...points]);
+  };
+
+  const pointDeselect = (points: LocationPoint[]) => {
+    setPointSelection((c) => c.filter((p) => points.findIndex((p2) => p2.x === p.x && p2.y == p.y) === -1));
+  };
+
+  const randomPointSelect = (points: LocationPoint[]) => {
+    setRandomPointSelection((c) => [...c, ...points]);
+  };
+
+  const randomPointDeselect = (points: LocationPoint[]) => {
+    setRandomPointSelection((c) => c.filter((p) => points.findIndex((p2) => p2.x === p.x && p2.y == p.y) === -1));
+  };
+
   return (
     <AppStateProviderContext.Provider
       value={{
@@ -83,7 +132,13 @@ export function AppStateProvider({ children }: AppStateProviderProps) {
         municipalityDeselect,
         coverageSelection,
         coverageSelect,
-        coverageDeselect
+        coverageDeselect,
+        pointSelection,
+        pointSelect,
+        pointDeselect,
+        randomPointSelection,
+        randomPointSelect,
+        randomPointDeselect
       }}
     >
       {children}

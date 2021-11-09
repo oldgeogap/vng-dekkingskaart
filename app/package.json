@@ -2,7 +2,7 @@
   "private": false,
   "name": "vng-dekkingskaart-app",
   "description": "VNG Dekkingskaart applicatie",
-  "version": "0.0.3",
+  "version": "0.7.1",
   "author": "Les Kleuver <les@spatialexplorers.nl>",
   "main": "app/background.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "mapbox-gl": "^2.4.1",
     "next-transpile-modules": "^8.0.0",
     "nprogress": "^0.2.0",
+    "react-error-boundary": "^3.1.4",
     "react-hook-form": "^7.15.4",
     "react-icons": "^4.2.0",
     "react-mapbox-gl": "^5.1.1",

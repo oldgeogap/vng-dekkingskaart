@@ -3,6 +3,7 @@ import * as React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { VscAdd, VscClose } from "react-icons/vsc";
 import { styled } from "renderer/ui/theme";
+import { useAppState } from "../provider/AppStateProvider";
 import { useLocationCheck } from "./LocationCheckProvider";
 
 export interface LocationPointFormProps {}
@@ -13,7 +14,8 @@ type Inputs = {
 };
 
 export function LocationPointForm({}: LocationPointFormProps) {
-  const { preset, setPoints } = useLocationCheck();
+  const { preset } = useLocationCheck();
+  const { pointSelect } = useAppState();
   const {
     register,
     handleSubmit,
@@ -31,7 +33,7 @@ export function LocationPointForm({}: LocationPointFormProps) {
   }, [preset]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    setPoints((p) => [...p, data]);
+    pointSelect([{ x: data.x, y: data.y }]);
     reset();
   };
 

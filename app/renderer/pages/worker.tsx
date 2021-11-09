@@ -4,6 +4,7 @@ import { workerActions } from "../../shared";
 import { calculateCoveragePercent } from "renderer/worker/coverage_percent";
 import { calculateCoveragePoint } from "renderer/worker/coverage_point";
 import { calculateRandomPoints } from "renderer/worker/random_points";
+import { calculateCoverageCountryPercent } from "renderer/worker/coverage_country_percent";
 const Worker = () => {
   // Send logs as messages to the main thread to show on the console
   const log = (value) => {
@@ -27,6 +28,17 @@ const Worker = () => {
               case workerActions.RANDOM_POINTS:
                 result = await calculateRandomPoints(arg.payload);
                 break;
+              case workerActions.COVERAGE_PERCENT_COUNTRY:
+                result = await calculateCoverageCountryPercent({
+                  ...arg.payload,
+                  report: (r) => {
+                    ipcRenderer.send("for-renderer", {
+                      action: workerActions.COVERAGE_PERCENT_COUNTRY,
+                      report: r
+                    });
+                  }
+                });
+                break;
             }
 
             ipcRenderer.send("for-renderer", {
@@ -34,6 +46,7 @@ const Worker = () => {
               result
             });
           } catch (err) {
+            console.error(err);
             ipcRenderer.send("for-renderer", {
               action: arg.action,
               error: true,
