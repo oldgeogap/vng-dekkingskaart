@@ -1,4 +1,4 @@
-import { Heading, Center, Spinner } from "@chakra-ui/react";
+import { Heading, Center, Spinner, Button } from "@chakra-ui/react";
 import { PDFViewer } from "@react-pdf/renderer";
 import { AnimatePresence } from "framer-motion";
 import * as React from "react";
@@ -10,6 +10,7 @@ import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
 import { LocationPoint } from "renderer/types";
 import { FeedbackPanel } from "renderer/ui/panel";
 import { styled } from "renderer/ui/theme";
+import { LocationCheckDownloadCSV } from "./LocationCheckDownloadCSV";
 
 import { LocationCheckResultRenderPDF } from "./LocationCheckResultRenderPDF";
 
@@ -21,6 +22,7 @@ export interface LocationCheckResultRenderProps {
 
 export function LocationCheckResultRender({ coverageFiles, points, entries }: LocationCheckResultRenderProps) {
   const { providerName, coverageTypeName } = useApp();
+  const [doCSV, setDoCSV] = React.useState(false);
   const renderImageProps = React.useMemo(
     () => ({
       dpi: 96,
@@ -69,6 +71,23 @@ export function LocationCheckResultRender({ coverageFiles, points, entries }: Lo
           </PDFLoadingIndication>
         </>
       )}
+      <CSVButtonContainer>
+        <Button colorScheme="bg" size="sm" onClick={() => setDoCSV(true)}>
+          CSV
+        </Button>
+      </CSVButtonContainer>
+      {doCSV && (
+        <LocationCheckDownloadCSV
+          filename="locatiecheck"
+          onDone={() => setDoCSV(false)}
+          providerName={providerName}
+          coverageTypeName={coverageTypeName}
+          coverageFiles={coverageFiles}
+          points={points}
+          entries={entries}
+          images={images}
+        />
+      )}
     </RenderContainer>
   );
 }
@@ -91,6 +110,13 @@ export const PDFLoadingIndication = styled.div`
     display: flex;
     align-items: center;
   }
+`;
+
+const CSVButtonContainer = styled.div`
+  right: 110px;
+  bottom: 10px;
+  position: absolute;
+  z-index: 999;
 `;
 
 function getMapStates(entries: CoveragePointEntry[]): MapState[] {

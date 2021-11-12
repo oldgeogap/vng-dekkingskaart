@@ -1,4 +1,4 @@
-import { Heading, Center, Spinner } from "@chakra-ui/react";
+import { Heading, Center, Spinner, Button } from "@chakra-ui/react";
 import * as React from "react";
 import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile, Municipality } from "renderer/db";
@@ -14,6 +14,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import { AnimatePresence } from "framer-motion";
 import { FeedbackPanel } from "renderer/ui/panel";
 import { PDFLoadingIndication } from "renderer/components/locationcheck/result/LocationCheckResultRender";
+import { RandomizerDownloadCSV } from "./RandomizerDownloadCSV";
 export interface RandomizerResultRenderProps {
   coverageFiles: CoverageFile[];
   entries: CoveragePointEntry[];
@@ -28,6 +29,7 @@ export function RandomizerResultRender({
   entries
 }: RandomizerResultRenderProps) {
   const { providerName, coverageTypeName } = useApp();
+  const [doCSV, setDoCSV] = React.useState(false);
   const renderImageProps = React.useMemo(
     () => ({
       dpi: 96,
@@ -77,6 +79,23 @@ export function RandomizerResultRender({
           </PDFLoadingIndication>
         </>
       )}
+      <CSVButtonContainer>
+        <Button colorScheme="bg" size="sm" onClick={() => setDoCSV(true)}>
+          CSV
+        </Button>
+      </CSVButtonContainer>
+      {doCSV && (
+        <RandomizerDownloadCSV
+          filename="locatiecheck"
+          onDone={() => setDoCSV(false)}
+          providerName={providerName}
+          coverageTypeName={coverageTypeName}
+          coverageFiles={coverageFiles}
+          points={points}
+          entries={entries}
+          images={images}
+        />
+      )}
     </RenderContainer>
   );
 }
@@ -85,6 +104,13 @@ const RenderContainer = styled.div`
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+`;
+
+const CSVButtonContainer = styled.div`
+  right: 110px;
+  bottom: 10px;
+  position: absolute;
+  z-index: 999;
 `;
 
 function getMapStates(entries: CoveragePointEntry[]): MapState[] {

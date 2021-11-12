@@ -42,9 +42,9 @@ export function MainNav({}: MainNavProps) {
         </Tab>
       </Tabs>
       <SideNav>
-        <Link href="/documentatie">
-          <a>Documentatie</a>
-        </Link>
+        <a href="/documentatie.pdf" target="_blank">
+          Documentatie
+        </a>
       </SideNav>
     </NavContainer>
   );

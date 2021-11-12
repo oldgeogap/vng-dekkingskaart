@@ -23,10 +23,11 @@ type Inputs = {
   count: number;
 };
 
+const _max_points = 35;
+
 export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
-  const { municipalitySelection, randomPointSelect } = useAppState();
+  const { municipalitySelection, randomPointSelect, randomPointSelection } = useAppState();
   const { points, loading, getRandomPoints } = useRandomPoints();
-  const disabled = municipalitySelection.length === 0;
 
   const {
     register,
@@ -51,14 +52,17 @@ export function RandomizerLocationForm({}: RandomizerLocationFormProps) {
     });
   };
 
+  let maxV = _max_points - randomPointSelection.length;
+  let disabled = maxV <= 0;
+
   return (
     <RandomizerLocationFormContainer>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl id="pointcount">
           <FormLabel>Punten toevoegen</FormLabel>
           <InputGroup>
-            <NumberInput size="sm" isDisabled={disabled}>
-              <NumberInputField {...register("count", { required: true, valueAsNumber: true, min: 1, max: 35 })} />
+            <NumberInput size="sm" isDisabled={disabled} min={1} max={maxV}>
+              <NumberInputField {...register("count", { required: true, valueAsNumber: true, min: 1, max: maxV })} />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />

@@ -25,7 +25,7 @@ export function LocationSelection({}: LocationSelectionProps) {
         <Filters>
           <LocationPointForm />
         </Filters>
-        <Selection>
+        <Selection className="scrollit">
           <PointList>
             {pointSelection.map((p, index) => (
               <li key={index} onMouseOver={() => setHover(p)} onMouseLeave={() => setHover(null)}>

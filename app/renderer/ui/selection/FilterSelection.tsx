@@ -36,6 +36,11 @@ export const Selection = styled.section`
       flex: 0 0 24px;
     }
   }
+
+  &.scrollit {
+    overflow-y: auto;
+    padding-bottom: 32px;
+  }
 `;
 
 export const Options = styled.section`

@@ -20,9 +20,9 @@ export function LocationCheckResult({ points, coverageFileIds }: LocationCheckRe
       <Back>
         <Button
           colorScheme="bg"
+          size="sm"
           aria-label="Terug"
           leftIcon={<VscClose />}
-          size="sm"
           onClick={() => router.push("/locatiecheck")}
         >
           Sluiten

@@ -27,7 +27,7 @@ export function RandomizerLocationSelection({}: RandomizerLocationSelectionProps
         <Filters>
           <RandomizerLocationForm />
         </Filters>
-        <Selection>
+        <Selection className="scrollit">
           <PointList>
             {randomPointSelection.map((p, index) => (
               <li key={index} onMouseOver={() => setHover(p)} onMouseLeave={() => setHover(null)}>
