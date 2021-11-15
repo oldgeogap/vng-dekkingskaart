@@ -7,8 +7,13 @@ import { styled } from "renderer/ui/theme";
 export interface LocationCheckLayerProps {}
 
 export function LocationCheckLayer({}: LocationCheckLayerProps) {
+  const [fix, setFix] = React.useState(false);
   const { pointSelection } = useAppState();
   const { hover } = useLocationCheck();
+
+  React.useEffect(() => {
+    setFix(true);
+  }, []);
 
   return (
     <>

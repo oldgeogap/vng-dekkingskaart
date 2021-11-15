@@ -49,7 +49,7 @@ export interface BoolLabelProps {
 }
 export const BoolLabel: React.FC<BoolLabelProps> = ({ yes, children }) => {
   return (
-    <View style={{ display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "4px" }}>
+    <View style={{ display: "flex", flexDirection: "row", alignItems: "center", marginBottom: "16px" }}>
       <View style={{ flex: 1 }}>
         <Text
           style={{
@@ -74,11 +74,15 @@ export const BoolLabel: React.FC<BoolLabelProps> = ({ yes, children }) => {
   );
 };
 
-export const PropText: React.FC = ({ children }) => {
+export type PropTextProps = {
+  small?: boolean;
+};
+export const PropText: React.FC<PropTextProps> = ({ small, children }) => {
   return (
     <Text
       style={{
-        fontSize: "12px"
+        fontSize: small ? "7px" : "12px",
+        paddingRight: "8px"
       }}
     >
       {children}

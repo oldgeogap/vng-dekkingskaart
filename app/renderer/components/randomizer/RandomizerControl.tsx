@@ -15,13 +15,7 @@ export function RandomizerControl({}: RandomizerControlProps) {
   const router = useRouter();
 
   const openWindow = () => {
-    router.push(
-      `/randomizer/result/${randomPointSelection
-        .map((point) => `${point.x},${point.y}`)
-        .join("x")}/${municipalitySelection.map((muni) => muni.id).join(",")}/${coverageSelection
-        .map((cov) => cov.id)
-        .join(",")}`
-    );
+    router.push(`/randomizer/result/`);
   };
 
   return (

@@ -87,7 +87,9 @@ export function MiniCompetitionResultRenderPDF({
             <ColHeader>DEKKINGSKAARTEN</ColHeader>
 
             {coverageFiles.map((c) => (
-              <PropText key={c.id}>{providerName(c.provider)}</PropText>
+              <PropText key={c.id}>
+                {`${providerName(c.provider)} ${coverageTypeName(c.coverage_type)} ${c.year}`}
+              </PropText>
             ))}
           </FlexCol>
         </Flex>
@@ -124,9 +126,11 @@ export function MiniCompetitionResultRenderPDF({
               <SubHeader>
                 Geselecteerde gemeenten:{"  "}
                 {municipalities.map((m) => (
-                  <Link key={m.id} src={`https://maps.google.com/?q=${m.name}`}>
-                    {m.name}
-                  </Link>
+                  <React.Fragment key={m.id}>
+                    <Link key={m.id} src={`https://maps.google.com/?q=${m.name}`}>
+                      {m.name}
+                    </Link>{" "}
+                  </React.Fragment>
                 ))}
               </SubHeader>
             </View>

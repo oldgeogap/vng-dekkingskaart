@@ -1,4 +1,4 @@
-import { InputGroup, Input, InputRightElement, IconButton, Checkbox } from "@chakra-ui/react";
+import { InputGroup, Input, InputRightElement, IconButton, Checkbox, Button, Center } from "@chakra-ui/react";
 import * as React from "react";
 import { VscClose } from "react-icons/vsc";
 import { useMunicipalityList } from "renderer/hooks/useMunicipalityList";
@@ -44,7 +44,7 @@ export function MunicipalitySelection({}: MunicipalitySelectionProps) {
           />
         </InputGroup>
       </Filters>
-      <Selection>
+      <Selection className={municipalitySelection.length > 10 ? "over" : "default"}>
         {municipalitySelection.map((muni) => (
           <Option key={muni.id}>
             <Checkbox
@@ -63,6 +63,19 @@ export function MunicipalitySelection({}: MunicipalitySelectionProps) {
             </Checkbox>
           </Option>
         ))}
+        {municipalitySelection.length > 0 && (
+          <Center mb={2} mt={2}>
+            <Button
+              size="xs"
+              variant="ghost"
+              onClick={() => {
+                municipalityDeselect(municipalitySelection.map((m) => m.id));
+              }}
+            >
+              alles deselecteren
+            </Button>
+          </Center>
+        )}
       </Selection>
 
       <Options>

@@ -65,12 +65,18 @@ export function RandomizerResultRenderPDF({
             <ColHeader>DEKKINGSKAARTEN</ColHeader>
 
             {coverageFiles.map((c) => (
-              <PropText key={c.id}>{providerName(c.provider)}</PropText>
+              <PropText key={c.id}>
+                {`${providerName(c.provider)} ${coverageTypeName(c.coverage_type)} ${c.year}`}
+              </PropText>
             ))}
           </FlexCol>
           <FlexCol>
-            <ColHeader>PUNTEN</ColHeader>
-            <PropText>{points.length} punten</PropText>
+            <ColHeader>{points.length} PUNTEN</ColHeader>
+            {points.map((p, n) => (
+              <PropText key={n} small>
+                {n + 1} {p.displayName}
+              </PropText>
+            ))}
           </FlexCol>
         </Flex>
         <DoubleHeadTable

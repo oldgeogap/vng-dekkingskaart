@@ -37,6 +37,11 @@ export const Selection = styled.section`
     }
   }
 
+  &.over {
+    flex: 0 0 45%;
+    overflow-y: auto;
+  }
+
   &.scrollit {
     overflow-y: auto;
     padding-bottom: 32px;

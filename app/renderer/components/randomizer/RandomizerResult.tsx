@@ -1,21 +1,36 @@
-import { IconButton } from "@chakra-ui/button";
 import { Button } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+
 import * as React from "react";
-import { VscChevronLeft, VscClose } from "react-icons/vsc";
-import { LocationPoint } from "renderer/types";
+
 import { styled } from "renderer/ui/theme";
-
+import { useAppState } from "../provider/AppStateProvider";
+import { Box, Spinner } from "@chakra-ui/react";
 import { RandomizerResultPreload } from "./result/RandomizerResultPreload";
+import { VscClose } from "react-icons/vsc";
+import { useRouter } from "next/router";
 
-export interface RandomizerResultProps {
-  points: LocationPoint[];
-  municipalityIds: string[];
-  coverageFileIds: number[];
-}
+export interface RandomizerResultProps {}
 
-export function RandomizerResult({ points, municipalityIds, coverageFileIds }: RandomizerResultProps) {
+export function RandomizerResult({}: RandomizerResultProps) {
   const router = useRouter();
+  const { pointSelection, municipalitySelection, coverageSelection } = useAppState();
+  const [loaded, setLoaded] = React.useState(false);
+  let municipalityIds = municipalitySelection.map((m) => m.id);
+  let points = pointSelection;
+  let coverageFileIds = coverageSelection.map((c) => c.id);
+
+  React.useEffect(() => {
+    if (municipalityIds.length || points.length || coverageFileIds.length) {
+      setLoaded(true);
+    }
+  }, [municipalityIds, points, coverageFileIds]);
+
+  if (!loaded)
+    return (
+      <Box p="32px">
+        <Spinner />
+      </Box>
+    );
   return (
     <>
       <Back>

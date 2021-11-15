@@ -47,7 +47,6 @@ export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
   React.useEffect(() => {
     if (ipcRenderer) {
       const onResult = (event, resp) => {
-        console.log("onResult", resp);
         if (resp.error) {
           console.error(resp.error);
           throw Error(resp.error.message);

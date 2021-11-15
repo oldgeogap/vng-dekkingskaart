@@ -28,6 +28,8 @@ export interface LocationCheckResultRenderPDFProps {
   images: MapImage[];
 }
 
+const _perTable = 5;
+
 export function LocationCheckResultRenderPDF({
   providerName,
   coverageTypeName,
@@ -44,6 +46,7 @@ export function LocationCheckResultRenderPDF({
     }
     return { cf: null, index: -1 };
   };
+
   return (
     <Document>
       <VNGPage>
@@ -56,19 +59,25 @@ export function LocationCheckResultRenderPDF({
             <ColHeader>DEKKINGSKAARTEN</ColHeader>
 
             {coverageFiles.map((c) => (
-              <PropText key={c.id}>{providerName(c.provider)}</PropText>
+              <PropText key={c.id}>
+                {`${providerName(c.provider)} ${coverageTypeName(c.coverage_type)} ${c.year}`}
+              </PropText>
             ))}
           </FlexCol>
           <FlexCol>
-            <ColHeader>PUNTEN</ColHeader>
-            <PropText>{points.length} punten</PropText>
+            <ColHeader>{points.length} PUNTEN</ColHeader>
+            {points.map((p, n) => (
+              <PropText key={n} small>
+                {n + 1} {p.displayName}
+              </PropText>
+            ))}
           </FlexCol>
         </Flex>
         <DoubleHeadTable
           rows={entries.map((entry) => {
             let { cf, index } = covFile(entry.id);
             if (cf) {
-              return providerName(cf.provider);
+              return `${providerName(cf.provider)} ${coverageTypeName(cf.coverage_type)} ${cf.year}`;
             }
             return "";
           })}
@@ -92,7 +101,9 @@ export function LocationCheckResultRenderPDF({
                 {providerName(cf.provider)} - {coverageTypeName(cf.coverage_type)} - {cf.year}
               </Header>
               <BoolLabel yes={!!point.hasCoverage}>Dekking op geselecteerde locatie</BoolLabel>
-              {pointName.displayName && <Text style={{ fontSize: 12 }}>{pointName.displayName}</Text>}
+              {pointName.displayName && (
+                <Text style={{ fontSize: 12, marginBottom: "4px" }}>{pointName.displayName}</Text>
+              )}
               <SubHeader>
                 Willekeurige locatie:{"  "}
                 <Link src={`https://www.google.com/maps/@${point.y},${point.x},14z`}>

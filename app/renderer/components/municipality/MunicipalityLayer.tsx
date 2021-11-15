@@ -107,7 +107,8 @@ export function MunicipalityLayer({ showMode }: MunicipalityLayerProps) {
           if (showMode) return;
           if (e.features) {
             let f = e.features[0];
-            toggle(f.id, f.properties.gemeentenaam);
+            console.log(f);
+            toggle(f.id, f.properties.name);
           }
         }}
         linePaint={linePaint}
