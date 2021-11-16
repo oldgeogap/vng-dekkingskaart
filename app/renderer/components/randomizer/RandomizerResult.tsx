@@ -13,10 +13,10 @@ export interface RandomizerResultProps {}
 
 export function RandomizerResult({}: RandomizerResultProps) {
   const router = useRouter();
-  const { pointSelection, municipalitySelection, coverageSelection } = useAppState();
+  const { randomPointSelection, municipalitySelection, coverageSelection } = useAppState();
   const [loaded, setLoaded] = React.useState(false);
   let municipalityIds = municipalitySelection.map((m) => m.id);
-  let points = pointSelection;
+  let points = randomPointSelection;
   let coverageFileIds = coverageSelection.map((c) => c.id);
 
   React.useEffect(() => {

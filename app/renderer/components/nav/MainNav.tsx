@@ -1,11 +1,40 @@
-import { Button, IconButton } from "@chakra-ui/react";
+import electron from "electron";
 import Link from "next/link";
 import * as React from "react";
 import { styled } from "renderer/ui/theme";
 import { IoSettingsOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
+import url from "url";
+import path from "path";
 
 export interface MainNavProps {}
+
+function openPDF(filePath) {
+  let pdfWindow = new electron.remote.BrowserWindow({
+    icon: "./build/icon.png",
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      plugins: true
+    }
+  });
+
+  let fullPath = path.resolve(electron.remote.app.getAppPath(), filePath);
+
+  pdfWindow.loadURL(
+    url.format({
+      pathname: fullPath,
+      protocol: "file:",
+      slashes: true
+    })
+  );
+
+  pdfWindow.setMenu(null);
+
+  pdfWindow.on("closed", function () {
+    pdfWindow = null;
+  });
+}
 
 export function MainNav({}: MainNavProps) {
   const { asPath } = useRouter();
@@ -42,7 +71,11 @@ export function MainNav({}: MainNavProps) {
         </Tab>
       </Tabs>
       <SideNav>
-        <a href="/documentatie.pdf" target="_blank">
+        <a
+          onClick={() => {
+            openPDF("./resources/documentatie.pdf");
+          }}
+        >
           Documentatie
         </a>
       </SideNav>
