@@ -1,9 +1,11 @@
-appId: com.spatialexplorers.vng
+appId: nl.geogap.vng
 productName: VNG Dekkingskaart
-copyright: Copyright © 2021 Geograp
+copyright: Copyright © 2021 Geogap
 directories:
   output: dist
   buildResources: resources
+nsis:
+  deleteAppDataOnUninstall: true
 files:
   - from: .
     filter:

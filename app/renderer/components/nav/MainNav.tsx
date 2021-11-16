@@ -73,7 +73,7 @@ export function MainNav({}: MainNavProps) {
       <SideNav>
         <a
           onClick={() => {
-            openPDF("./resources/documentatie.pdf");
+            openPDF("./app/documentatie.pdf");
           }}
         >
           Documentatie
@@ -148,5 +148,6 @@ const SideNav = styled.aside`
     font-weight: bold;
     font-size: 12px;
     color: ${(props) => props.theme.colors.bg[300]};
+    cursor: pointer;
   }
 `;
