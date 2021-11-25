@@ -6,6 +6,8 @@ import { styled } from "renderer/ui/theme";
 
 export interface LocationCheckLayerProps {}
 
+export const _layer_id = "locationcheck-layer-points";
+
 export function LocationCheckLayer({}: LocationCheckLayerProps) {
   const [fix, setFix] = React.useState(false);
   const { pointSelection } = useAppState();
@@ -18,6 +20,7 @@ export function LocationCheckLayer({}: LocationCheckLayerProps) {
   return (
     <>
       <Layer
+        id={_layer_id}
         type="circle"
         paint={{
           "circle-color": "transparent",

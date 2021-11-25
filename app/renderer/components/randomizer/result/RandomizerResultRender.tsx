@@ -130,6 +130,16 @@ function getMapStates(entries: CoveragePointEntry[]): MapState[] {
         },
         sources: [
           {
+            id: `source${index2}coverage`,
+            source: {
+              type: "geojson",
+              data: {
+                type: "FeatureCollection",
+                features: [entry.coverageShape]
+              }
+            }
+          },
+          {
             id: `source${index2}`,
             source: {
               type: "geojson",
@@ -138,6 +148,15 @@ function getMapStates(entries: CoveragePointEntry[]): MapState[] {
           }
         ],
         layers: [
+          {
+            id: `layer${index2}coverage`,
+            source: `source${index2}coverage`,
+            type: "fill",
+            paint: {
+              "fill-color": "#0000f2",
+              "fill-opacity": 0.1
+            }
+          },
           {
             id: `layer${index2}circle`,
             type: "circle",

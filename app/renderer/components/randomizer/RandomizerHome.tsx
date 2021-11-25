@@ -8,7 +8,7 @@ import { MunicipalitySelection } from "../municipality/MunicipalitySelection";
 import { useApp } from "../provider/AppProvider";
 import { useAppState } from "../provider/AppStateProvider";
 import { RandomizerControl } from "./RandomizerControl";
-import { RandomizerLayer } from "./RandomizerLayer";
+import { RandomizerLayer, _layer_id } from "./RandomizerLayer";
 import { RandomizerLocationSelection } from "./RandomizerLocationSelection";
 import { RandomizerProvider, useRandomizer } from "./RandomizerProvider";
 
@@ -44,7 +44,7 @@ export function RandomizerHomeInner({}: RandomizerHomeProps) {
         >
           <MunicipalityLayer showMode={randomPointSelection && randomPointSelection.length > 0} />
           <RandomizerLayer />
-          <CoverageFileLayers visibleIDS={coverageFileVisible} />
+          <CoverageFileLayers visibleIDS={coverageFileVisible} beforeId={_layer_id} />
         </MapRenderer>
       </MapContainer>
     </RandomizerHomeContainer>

@@ -6,13 +6,15 @@ import { useAppState } from "../provider/AppStateProvider";
 
 export interface CoverageFileLayersProps {
   visibleIDS: number[];
+  beforeId?: string;
 }
 
 export interface CoverageFileLayerProps {
   file: CoverageFile;
+  beforeId?: string;
 }
 
-export function CoverageFileLayers({ visibleIDS }: CoverageFileLayersProps) {
+export function CoverageFileLayers({ visibleIDS, beforeId }: CoverageFileLayersProps) {
   const { coverageSelection } = useAppState();
 
   let showFiles = React.useMemo(
@@ -25,13 +27,13 @@ export function CoverageFileLayers({ visibleIDS }: CoverageFileLayersProps) {
       {showFiles
         .filter((cf) => cf.path)
         .map((cf) => (
-          <CoverageFileLayer key={cf.id} file={cf} />
+          <CoverageFileLayer key={cf.id} file={cf} beforeId={beforeId} />
         ))}
     </>
   );
 }
 
-function CoverageFileLayer({ file }: CoverageFileLayerProps) {
+function CoverageFileLayer({ file, beforeId }: CoverageFileLayerProps) {
   if (!file.path) return null;
 
   const { data, loading, error } = useLoadFile(file.path, true);
@@ -44,10 +46,11 @@ function CoverageFileLayer({ file }: CoverageFileLayerProps) {
     <GeoJSONLayer
       key={file.id}
       id={`source-${file.id}`}
+      beforeId={beforeId}
       data={data}
       fillPaint={{
-        "fill-color": "red",
-        "fill-opacity": 0.8
+        "fill-color": "#2D006A",
+        "fill-opacity": 0.4
       }}
     />
   );

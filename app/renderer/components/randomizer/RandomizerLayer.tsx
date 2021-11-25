@@ -11,7 +11,7 @@ import { styled } from "renderer/ui/theme";
 
 export interface RandomizerLayerProps {}
 
-const _layer_id = "randomizer-layer-points";
+export const _layer_id = "randomizer-layer-points";
 
 export function RandomizerLayer({}: RandomizerLayerProps) {
   const { hover } = useRandomizer();

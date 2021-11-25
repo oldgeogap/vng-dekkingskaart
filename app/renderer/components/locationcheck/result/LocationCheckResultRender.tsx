@@ -160,7 +160,7 @@ function getMapStates(entries: CoveragePointEntry[]): MapState[] {
             type: "fill",
             paint: {
               "fill-color": "#0000f2",
-              "fill-opacity": 0.3
+              "fill-opacity": 0.1
             }
           },
           {
