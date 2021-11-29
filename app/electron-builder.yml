@@ -1,5 +1,7 @@
 appId: nl.geogap.vng
 productName: VNG Dekkingskaart
+win:
+  publisherName: Geogap
 copyright: Copyright © 2021 Geogap
 directories:
   output: dist
