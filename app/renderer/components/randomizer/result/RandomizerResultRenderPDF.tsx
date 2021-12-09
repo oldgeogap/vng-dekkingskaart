@@ -18,7 +18,7 @@ import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
 import { LocationPoint } from "renderer/types";
 import { MapImage } from "renderer/components/map/render/useMapRenderImage";
 import { styled } from "@chakra-ui/system";
-import { formatDate } from "renderer/util";
+import { formatDate, sortMunicipalities } from "renderer/util";
 
 export interface RandomizerResultRenderPDFProps {
   providerName: (id: string | number) => string;
@@ -56,8 +56,8 @@ export function RandomizerResultRenderPDF({
         </View>
         <Flex mb={32}>
           <FlexCol>
-            <ColHeader>GEMEENTEN</ColHeader>
-            {municipalities.map((m) => (
+            <ColHeader>GEMEENTE</ColHeader>
+            {sortMunicipalities(municipalities).map((m) => (
               <PropText key={m.id}>{m.name}</PropText>
             ))}
           </FlexCol>

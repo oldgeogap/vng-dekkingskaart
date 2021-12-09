@@ -2,8 +2,8 @@
   "private": false,
   "name": "vng-dekkingskaart-app",
   "description": "VNG Dekkingskaart applicatie",
-  "version": "1.0.0",
-  "author": "Les Kleuver <les@spatialexplorers.nl>",
+  "version": "1.0.1",
+  "author": "Geogap <info@geogap.nl>",
   "publisher": "Geogap",
   "main": "app/background.js",
   "scripts": {

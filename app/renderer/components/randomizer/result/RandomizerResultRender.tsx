@@ -15,6 +15,7 @@ import { AnimatePresence } from "framer-motion";
 import { FeedbackPanel } from "renderer/ui/panel";
 import { PDFLoadingIndication } from "renderer/components/locationcheck/result/LocationCheckResultRender";
 import { RandomizerDownloadCSV } from "./RandomizerDownloadCSV";
+import { fileTimeStamp } from "renderer/util";
 export interface RandomizerResultRenderProps {
   coverageFiles: CoverageFile[];
   entries: CoveragePointEntry[];
@@ -77,16 +78,17 @@ export function RandomizerResultRender({
               PDF aan het genereren <Spinner ml={16} />
             </div>
           </PDFLoadingIndication>
+          <CSVButtonContainer>
+            <Button colorScheme="bg" size="sm" onClick={() => setDoCSV(true)}>
+              CSV
+            </Button>
+          </CSVButtonContainer>
         </>
       )}
-      <CSVButtonContainer>
-        <Button colorScheme="bg" size="sm" onClick={() => setDoCSV(true)}>
-          CSV
-        </Button>
-      </CSVButtonContainer>
+
       {doCSV && (
         <RandomizerDownloadCSV
-          filename="locatiecheck"
+          filename={`locatiecheck_${fileTimeStamp()}`}
           onDone={() => setDoCSV(false)}
           providerName={providerName}
           coverageTypeName={coverageTypeName}

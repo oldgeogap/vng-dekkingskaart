@@ -52,7 +52,7 @@ export function LocationCheckResultRenderPDF({
       <VNGPage>
         <View style={{ marginBottom: "64px" }}>
           <Text style={styles.docpreheader}>{formatDate(new Date())}</Text>
-          <Text style={styles.docheader}>Locatie check</Text>
+          <Text style={styles.docheader}>Locatiecheck</Text>
         </View>
         <Flex mb={32}>
           <FlexCol>
@@ -105,7 +105,6 @@ export function LocationCheckResultRenderPDF({
                 <Text style={{ fontSize: 12, marginBottom: "4px" }}>{pointName.displayName}</Text>
               )}
               <SubHeader>
-                Willekeurige locatie:{"  "}
                 <Link src={`https://www.google.com/maps/@${point.y},${point.x},14z`}>
                   {point.x}, {point.y}
                 </Link>

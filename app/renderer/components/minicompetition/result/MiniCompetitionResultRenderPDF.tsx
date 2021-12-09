@@ -18,7 +18,7 @@ import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
 import { LocationPoint } from "renderer/types";
 import { MapImage } from "renderer/components/map/render/useMapRenderImage";
 import { CoveragePercentEntry } from "renderer/hooks/useCoveragePercent";
-import { formatDate } from "renderer/util";
+import { formatDate, sortMunicipalities } from "renderer/util";
 
 export interface MiniCompetitionResultRenderPDFProps {
   providerName: (id: string | number) => string;
@@ -78,8 +78,8 @@ export function MiniCompetitionResultRenderPDF({
         </View>
         <Flex mb={32}>
           <FlexCol>
-            <ColHeader>GEMEENTEN</ColHeader>
-            {municipalities.map((m) => (
+            <ColHeader>GEMEENTE</ColHeader>
+            {sortMunicipalities(municipalities).map((m) => (
               <PropText key={m.id}>{m.name}</PropText>
             ))}
           </FlexCol>

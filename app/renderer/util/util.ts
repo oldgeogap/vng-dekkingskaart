@@ -1,6 +1,7 @@
 import { Option } from "renderer/components/options";
 import { format, formatDistance } from "date-fns";
 import nl from "date-fns/locale/nl";
+import { Municipality } from "renderer/db";
 
 export const numberFormatter = new Intl.NumberFormat("nl-NL");
 
@@ -20,6 +21,11 @@ export function formatTimestamp(n: number) {
 
 export function formatDate(d: Date) {
   return format(d, "dd-MM-yyyy HH:mm:ss", { locale: nl });
+}
+
+export function fileTimeStamp() {
+  let d = new Date();
+  return format(d, "yyyy-MM-dd-HH-mm-ss", { locale: nl });
 }
 
 export function formatTimestampDistance(n: number) {
@@ -69,4 +75,21 @@ export function msToReadableTime(ms: number) {
   }
 
   return readable;
+}
+
+export function sortMunicipalities(municipalities: Municipality[]) {
+  let result = [...municipalities];
+  result.sort((a, b) => {
+    let aName = a.name.toLowerCase();
+    let bName = b.name.toLowerCase();
+
+    if (aName < bName) {
+      return -1;
+    }
+    if (aName > bName) {
+      return 1;
+    }
+    return 0;
+  });
+  return result;
 }

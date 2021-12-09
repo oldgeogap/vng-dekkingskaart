@@ -57,7 +57,7 @@ function makeCSV({ images, entries, points, coverageFiles, providerName, coverag
     return { cf: null, index: -1 };
   };
 
-  let result = ["id,label,description,tags,gemeente,centroid"];
+  let result = ["index;provider;dekkingskaart;versie;dekking;punt;x;y"];
   images.forEach((image, n) => {
     let [entryIndex, pointIndex] = image.id.split("x").map((s) => parseInt(s, 10));
     let entry = entries[entryIndex];

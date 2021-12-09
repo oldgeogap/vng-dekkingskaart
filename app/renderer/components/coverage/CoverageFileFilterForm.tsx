@@ -48,7 +48,7 @@ export function CoverageFileFilterForm({ onChange }: CoverageFileFilterFormProps
             </option>
           ))}
         </Select>
-        <Input variant="flushed" size="sm" placeholder="jaar" {...register("year")} mr={4} />
+        <Input variant="flushed" size="sm" placeholder="versie" {...register("year")} mr={4} />
         <Button variant="ghost" size="xs" onClick={doReset}>
           herstel
         </Button>

@@ -10,6 +10,7 @@ import { CoveragePointEntry } from "renderer/hooks/useCoveragePoints";
 import { LocationPoint } from "renderer/types";
 import { FeedbackPanel } from "renderer/ui/panel";
 import { styled } from "renderer/ui/theme";
+import { fileTimeStamp } from "renderer/util";
 import { LocationCheckDownloadCSV } from "./LocationCheckDownloadCSV";
 
 import { LocationCheckResultRenderPDF } from "./LocationCheckResultRenderPDF";
@@ -69,16 +70,17 @@ export function LocationCheckResultRender({ coverageFiles, points, entries }: Lo
               PDF aan het genereren <Spinner ml={16} />
             </div>
           </PDFLoadingIndication>
+          <CSVButtonContainer>
+            <Button colorScheme="bg" size="sm" onClick={() => setDoCSV(true)}>
+              CSV
+            </Button>
+          </CSVButtonContainer>
         </>
       )}
-      <CSVButtonContainer>
-        <Button colorScheme="bg" size="sm" onClick={() => setDoCSV(true)}>
-          CSV
-        </Button>
-      </CSVButtonContainer>
+
       {doCSV && (
         <LocationCheckDownloadCSV
-          filename="locatiecheck"
+          filename={`locatiecheck_${fileTimeStamp()}`}
           onDone={() => setDoCSV(false)}
           providerName={providerName}
           coverageTypeName={coverageTypeName}
