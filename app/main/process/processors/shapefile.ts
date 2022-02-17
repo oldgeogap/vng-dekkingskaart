@@ -5,7 +5,6 @@ export async function processShapefile(path: string, targetFile: string) {
   const content = fs.readFileSync(path);
   let buf = Buffer.from(content);
   const converted = await shp(buf);
-
   await fs.outputFile(targetFile, JSON.stringify(converted, null, "  "));
 
   return targetFile;

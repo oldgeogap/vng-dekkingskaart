@@ -24,6 +24,7 @@ export async function calculateCoveragePercent({
 }: CoveragePercentArguments): Promise<CoveragePercentResult> {
   //result variables
   let municipalityShapes = await getMunicipalityShapes(municipalityIds);
+  //logToFile(municipalityShapes, "muni", "geojson");
   let coverageShape: any = null;
   let coveragePercent = 0;
 
@@ -43,12 +44,22 @@ export async function calculateCoveragePercent({
   });
 
   let fc = turf.combine(turf.featureCollection(coverageFeatures));
+
+  // logToFile(fc, "combined", "geojson");
+  // console.log("Combined count", fc.features.length);
   let coverageFeaturesCombined = fc.features[0] as Feature<MultiPolygon>;
 
   // logToFile(coverageFeaturesCombined, "coverage", "geojson");
   // logToFile(workArea, "workarea", "geojson");
   coverageShape = turf.intersect(coverageFeaturesCombined, workArea);
-
+  // logToFile(
+  //   {
+  //     type: "FeatureCollection",
+  //     features: [coverageShape]
+  //   },
+  //   "coverageShape",
+  //   "geojson"
+  // );
   let coverageArea = turf.area(coverageShape);
   let municipalityArea = turf.area(workArea);
   coveragePercent = (coverageArea / municipalityArea) * 100;

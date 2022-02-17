@@ -122,7 +122,7 @@ export function MiniCompetitionResultRenderPDF({
               <Header>
                 {providerName(covFile.provider)} - {coverageTypeName(covFile.coverage_type)} - {covFile.year}
               </Header>
-              <Text>Dekking in geselecteerde gemeente {formatNumber(entry.coveragePercent, "%")}</Text>
+              <Text>Dekking in geselecteerde gemeente(n) {formatNumber(entry.coveragePercent, "%")}</Text>
               <SubHeader>
                 Geselecteerde gemeenten:{"  "}
                 {municipalities.map((m) => (

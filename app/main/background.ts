@@ -23,7 +23,7 @@ if (isProd) {
   });
 
   const workerWindow = createWindow("worker", {
-    show: false, // <--- Comment me out to debug the worker window
+    show: !isProd, // <--- Comment me out to debug the worker window
     webPreferences: { nodeIntegration: true }
   });
 
