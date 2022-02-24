@@ -17,7 +17,7 @@ export type CoveragePercentEntry = {
   coverageFilePath: string;
   municipalityIds: string[];
   coveragePercent: number | null;
-  coverageShape: Feature<MultiPolygon> | null;
+  coverageShapes: Feature<MultiPolygon>[] | null;
   municipalityShapes: Feature<MultiPolygon>[] | null;
 };
 
@@ -39,7 +39,7 @@ export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
       coverageFilePath: entry.coverageFilePath,
       municipalityIds: entry.municipalityIds,
       coveragePercent: null,
-      coverageShape: null,
+      coverageShapes: null,
       municipalityShapes: null
     }))
   );
@@ -58,7 +58,7 @@ export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
             if (entry) {
               entry.loaded = true;
               entry.coveragePercent = data.coveragePercent;
-              entry.coverageShape = data.coverageShape;
+              entry.coverageShapes = data.coverageShapes;
               entry.municipalityShapes = data.municipalityShapes;
               return [...old.filter((o) => o.id !== data.id), entry];
             }

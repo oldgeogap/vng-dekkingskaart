@@ -98,7 +98,7 @@ function getMapStates(coverageFiles: CoverageFile[], entries: CoveragePercentEnt
 
     const coverageGeoJSON: any = {
       type: "FeatureCollection",
-      features: [entry.coverageShape]
+      features: entry.coverageShapes
     };
 
     const b = bbox(workAreaGeoJSON);

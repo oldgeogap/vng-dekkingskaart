@@ -2,6 +2,7 @@ import { getCountryShape, getCoverageShape } from "../util";
 import * as turf from "@turf/turf";
 import { Feature, MultiPolygon } from "@turf/turf";
 import booleanContains from "@turf/boolean-contains";
+import { logToFile } from "../util/log";
 export type CoveragePercentCountryArguments = {
   coverageFilePath: string;
   report?: (report: Report) => void;
@@ -26,10 +27,13 @@ export async function calculateCoverageCountryPercent({
   let coveragePercent = 0;
 
   try {
+    console.log("CALC A");
     const countryShape = await getCountryShape();
+    console.log("CALC B");
     const countryFeature = countryShape.features[0] as Feature<MultiPolygon>;
+    console.log("CALC C");
     const countryArea = countryShape.features[0].properties.area;
-
+    console.log("CALC D");
     const coverageShapes = getCoverageShape(coverageFilePath);
 
     let coverageArea = 0;
@@ -41,8 +45,11 @@ export async function calculateCoverageCountryPercent({
     let blockDelta = 0;
 
     coverageShapes.features.forEach((shape, n) => {
+      console.log("CALC E");
+      
       let section = turf.intersect(countryFeature, shape);
       if (section) {
+        console.log("CALC F");
         coverageArea += turf.area(section);
       }
       let curBlock = Math.ceil(n / blockSize);

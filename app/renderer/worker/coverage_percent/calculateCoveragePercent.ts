@@ -10,11 +10,19 @@ export type CoveragePercentArguments = {
   municipalityIds: string[];
 };
 
+export type CalcResult = {
+  municipalityId: string;
+  coverageArea: number;
+  municipalityArea: number;
+  coveragePercent: number;
+};
+
 export type CoveragePercentResult = {
   id: string;
-  coverageShape: Feature<MultiPolygon>;
+  coverageShapes: Feature<MultiPolygon>[];
   municipalityShapes: Feature<MultiPolygon>[];
   coveragePercent: number;
+  calcResult: CalcResult[];
 };
 
 export async function calculateCoveragePercent({
@@ -23,51 +31,59 @@ export async function calculateCoveragePercent({
   municipalityIds
 }: CoveragePercentArguments): Promise<CoveragePercentResult> {
   //result variables
+
   let municipalityShapes = await getMunicipalityShapes(municipalityIds);
   //logToFile(municipalityShapes, "muni", "geojson");
-  let coverageShape: any = null;
-  let coveragePercent = 0;
 
   //read input
   let coverageString = fs.readFileSync(coverageFilePath, "utf8");
   let coverageJSON = JSON.parse(coverageString);
-  let workArea = getWorkarea(municipalityShapes);
 
-  let bbox = turf.bbox(workArea);
-  let bboxPolygon = turf.bboxPolygon(bbox);
+  let coverageShapes = [];
+  let results: CalcResult[] = [];
+  municipalityShapes.forEach((muni, n) => {
+    let bbox = turf.bbox(muni);
+    let bboxPolygon = turf.bboxPolygon(bbox);
 
-  let coverageFeatures: Feature<Polygon>[] = [];
-  coverageJSON.features.forEach((feature) => {
-    if (booleanIntersects(bboxPolygon, feature)) {
-      coverageFeatures.push(feature);
-    }
+    let coverageFeatures: Feature<Polygon>[] = [];
+
+    coverageJSON.features.forEach((feature) => {
+      if (booleanIntersects(bboxPolygon, feature)) {
+        coverageFeatures.push(feature);
+      }
+    });
+
+    let fc = turf.combine(turf.featureCollection(coverageFeatures));
+    let coverageFeaturesCombined = fc.features[0] as Feature<MultiPolygon>;
+    let coverageShape = turf.intersect(coverageFeaturesCombined, muni);
+
+    coverageShapes.push(coverageShape);
+
+    let coverageArea = turf.area(coverageShape);
+    let municipalityArea = turf.area(muni);
+    let coveragePercent = (coverageArea / municipalityArea) * 100;
+
+    results.push({
+      municipalityId: municipalityIds[n],
+      coverageArea,
+      municipalityArea,
+      coveragePercent
+    });
   });
 
-  let fc = turf.combine(turf.featureCollection(coverageFeatures));
-
-  // logToFile(fc, "combined", "geojson");
-  // console.log("Combined count", fc.features.length);
-  let coverageFeaturesCombined = fc.features[0] as Feature<MultiPolygon>;
-
-  // logToFile(coverageFeaturesCombined, "coverage", "geojson");
-  // logToFile(workArea, "workarea", "geojson");
-  coverageShape = turf.intersect(coverageFeaturesCombined, workArea);
-  // logToFile(
-  //   {
-  //     type: "FeatureCollection",
-  //     features: [coverageShape]
-  //   },
-  //   "coverageShape",
-  //   "geojson"
-  // );
-  let coverageArea = turf.area(coverageShape);
-  let municipalityArea = turf.area(workArea);
-  coveragePercent = (coverageArea / municipalityArea) * 100;
+  let totalCoverageArea = results.reduce((acc, cur) => {
+    return acc + cur.coverageArea;
+  }, 0);
+  let totalMunicipalityArea = results.reduce((acc, cur) => {
+    return acc + cur.municipalityArea;
+  }, 0);
+  let coveragePercent = (totalCoverageArea / totalMunicipalityArea) * 100;
 
   return {
     id,
-    coverageShape,
+    coverageShapes,
     municipalityShapes,
-    coveragePercent
+    coveragePercent,
+    calcResult: results
   };
 }
