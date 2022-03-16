@@ -36,7 +36,7 @@ export function CoverageFileLayers({ visibleIDS, beforeId }: CoverageFileLayersP
 function CoverageFileLayer({ file, beforeId }: CoverageFileLayerProps) {
   if (!file.path) return null;
 
-  const { data, loading, error } = useLoadFile(file.path, true);
+  const { data, loading, error } = useLoadFile(file.path.replace(".geojson", ".origin.geojson"), true);
   if (loading) return null;
   if (error) {
     console.error(error);

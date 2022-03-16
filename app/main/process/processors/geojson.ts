@@ -10,6 +10,8 @@ export async function processGeoJSON(path: string, targetFile: string) {
 }
 
 export async function postProcessGeoJSON(targetFile: string, geojson: any) {
+  await fs.outputFile(targetFile.replace(".geojson", ".origin.geojson"), JSON.stringify(geojson, null, "  "));
+
   let negative = {
     type: "FeatureCollection",
     features: []
