@@ -2,6 +2,9 @@ import { getCountryShape, getCoverageShape } from "../util";
 import * as turf from "@turf/turf";
 import { Feature, MultiPolygon } from "@turf/turf";
 import booleanContains from "@turf/boolean-contains";
+import booleanOverlap from "@turf/boolean-overlap";
+
+import booleanIntersects from "@turf/boolean-intersects";
 import { logToFile } from "../util/log";
 export type CoveragePercentCountryArguments = {
   coverageFilePath: string;
@@ -27,29 +30,28 @@ export async function calculateCoverageCountryPercent({
   let coveragePercent = 0;
 
   try {
-    console.log("CALC A");
     const countryShape = await getCountryShape();
-    console.log("CALC B");
+
     const countryFeature = countryShape.features[0] as Feature<MultiPolygon>;
-    console.log("CALC C");
+
     const countryArea = countryShape.features[0].properties.area;
-    console.log("CALC D");
-    const coverageShapes = getCoverageShape(coverageFilePath);
+
+    const [coverageShapes, coverageDonutShapes] = getCoverageShape(coverageFilePath);
 
     let coverageArea = 0;
 
     let blockSize = 1000;
-    let blockCount = Math.ceil(coverageShapes.features.length / blockSize);
+    let total = coverageShapes.features.length;
+    if (coverageDonutShapes) total += coverageDonutShapes.features.length;
+
+    let blockCount = Math.ceil(total / blockSize);
     let startTime = performance.now();
     let block = 1;
     let blockDelta = 0;
 
     coverageShapes.features.forEach((shape, n) => {
-      console.log("CALC E");
-      
       let section = turf.intersect(countryFeature, shape);
       if (section) {
-        console.log("CALC F");
         coverageArea += turf.area(section);
       }
       let curBlock = Math.ceil(n / blockSize);
@@ -68,7 +70,36 @@ export async function calculateCoverageCountryPercent({
       }
     });
 
-    coveragePercent = (coverageArea / countryArea) * 100;
+    let negativeArea = 0;
+
+    if (coverageDonutShapes) {
+      coverageDonutShapes.forEach((donut, n) => {
+        if (booleanContains(donut, countryFeature)) {
+          negativeArea += turf.area(donut);
+        } else if (booleanOverlap(donut, countryFeature)) {
+          let insect = turf.intersect(donut, countryFeature);
+          negativeArea += turf.area(insect);
+        }
+
+        let curBlock = Math.ceil(n / blockSize);
+        if (curBlock !== block) {
+          block = curBlock;
+          blockDelta = performance.now() - startTime;
+          startTime = performance.now();
+          if (report) {
+            report({
+              blockSize,
+              blockCount,
+              block,
+              blockDelta
+            });
+          }
+        }
+      });
+    }
+
+    let area = coverageArea - negativeArea;
+    coveragePercent = (area / countryArea) * 100;
   } catch (err) {
     console.error(err);
   }

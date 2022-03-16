@@ -18,6 +18,9 @@ ipcMain.on(ipcEvents.DELETE_FILE, async (event, arg) => {
   console.log("Deleting ", targetFile, "...");
   if (targetFile.startsWith(getCoveragePath())) {
     await fs.remove(targetFile);
+    if (fs.existsSync(targetFile.replace(".geojson", ".donuts.geojson"))) {
+      await fs.remove(targetFile.replace(".geojson", ".donuts.geojson"));
+    }
     event.sender.send(ipcEvents.DELETE_FILE_RESULT, { success: true, result: targetFile });
   } else {
     event.sender.send(ipcEvents.DELETE_FILE_RESULT, { success: false, error: `Niet toegestaan voor "${targetFile}"` });

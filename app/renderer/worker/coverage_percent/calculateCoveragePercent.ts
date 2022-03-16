@@ -2,8 +2,9 @@ import fs from "fs";
 import * as turf from "@turf/turf";
 import { Feature, Polygon, MultiPolygon } from "@turf/turf";
 import booleanIntersects from "@turf/boolean-intersects";
-import { getMunicipalityShapes, getWorkarea } from "../util";
+import { getCoverageShape, getMunicipalityShapes, getWorkarea } from "../util";
 import { logToFile } from "../util/log";
+
 export type CoveragePercentArguments = {
   id: string;
   coverageFilePath: string;
@@ -36,8 +37,7 @@ export async function calculateCoveragePercent({
   //logToFile(municipalityShapes, "muni", "geojson");
 
   //read input
-  let coverageString = fs.readFileSync(coverageFilePath, "utf8");
-  let coverageJSON = JSON.parse(coverageString);
+  const [coverageJSON, coverageDonutsJSON] = getCoverageShape(coverageFilePath);
 
   let coverageShapes = [];
   let results: CalcResult[] = [];
@@ -45,7 +45,8 @@ export async function calculateCoveragePercent({
     let bbox = turf.bbox(muni);
     let bboxPolygon = turf.bboxPolygon(bbox);
 
-    let coverageFeatures: Feature<Polygon>[] = [];
+    let coverageFeatures: Feature<Polygon | MultiPolygon>[] = [];
+    let coverageDonutFeatures: Feature<Polygon>[] = [];
 
     coverageJSON.features.forEach((feature) => {
       if (booleanIntersects(bboxPolygon, feature)) {
@@ -53,10 +54,31 @@ export async function calculateCoveragePercent({
       }
     });
 
-    let fc = turf.combine(turf.featureCollection(coverageFeatures));
-    let coverageFeaturesCombined = fc.features[0] as Feature<MultiPolygon>;
-    let coverageShape = turf.intersect(coverageFeaturesCombined, muni);
+    if (coverageDonutsJSON) {
+      coverageDonutsJSON.features.forEach((feature) => {
+        if (booleanIntersects(bboxPolygon, feature)) {
+          coverageDonutFeatures.push(feature);
+        }
+      });
+    }
 
+    coverageFeatures.forEach((cf, i) => {
+      let coverageShape = cf;
+      if (coverageShape) {
+        coverageDonutFeatures.forEach((donutFeature) => {
+          if (cf.id === donutFeature.properties.id) {
+            coverageShape = turf.difference(coverageShape, donutFeature);
+          }
+        });
+        coverageFeatures[i] = coverageShape;
+      } else {
+        coverageFeatures[i] = null;
+      }
+    });
+
+    let fc = turf.combine(turf.featureCollection(coverageFeatures.filter((cf) => cf !== null)));
+    let coverageShape = fc.features[0] as Feature<MultiPolygon | Polygon>;
+    coverageShape = turf.intersect(coverageShape, muni);
     coverageShapes.push(coverageShape);
 
     let coverageArea = turf.area(coverageShape);
