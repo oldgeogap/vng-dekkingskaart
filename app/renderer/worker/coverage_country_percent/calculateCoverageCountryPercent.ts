@@ -31,26 +31,41 @@ export async function calculateCoverageCountryPercent({
 
   try {
     const countryShape = await getCountryShape();
-
     const countryFeature = countryShape.features[0] as Feature<MultiPolygon>;
-
     const countryArea = countryShape.features[0].properties.area;
-
     const [coverageShapes, coverageDonutShapes] = getCoverageShape(coverageFilePath);
 
     let coverageArea = 0;
 
     let blockSize = 1000;
-    let total = coverageShapes.features.length;
-    if (coverageDonutShapes) total += coverageDonutShapes.features.length;
+    let totalShells = coverageShapes.features.length;
+    let totalDonuts = 0;
+
+    if (coverageDonutShapes) {
+      totalDonuts = coverageDonutShapes.features.length;
+    }
+
+    let total = totalShells + totalDonuts;
+
+    console.log("Total shell shapes", totalShells);
+    console.log("Total donuts", totalDonuts);
+    console.log("Total shapes", total);
 
     let blockCount = Math.ceil(total / blockSize);
     let startTime = performance.now();
     let block = 1;
     let blockDelta = 0;
 
+    let bbox = turf.bbox(countryFeature);
+    let bboxPolygon = turf.bboxPolygon(bbox);
+
     coverageShapes.features.forEach((shape, n) => {
-      let section = turf.intersect(countryFeature, shape);
+      let section = null;
+      if (booleanContains(bboxPolygon, shape)) {
+        section = shape;
+      } else if (booleanOverlap(shape, countryFeature)) {
+        section = turf.intersect(countryFeature, shape);
+      }
       if (section) {
         coverageArea += turf.area(section);
       }
@@ -73,15 +88,17 @@ export async function calculateCoverageCountryPercent({
     let negativeArea = 0;
 
     if (coverageDonutShapes) {
-      coverageDonutShapes.forEach((donut, n) => {
-        if (booleanContains(donut, countryFeature)) {
+      coverageDonutShapes.features.forEach((donut, n) => {
+        if (booleanContains(bboxPolygon, donut)) {
           negativeArea += turf.area(donut);
-        } else if (booleanOverlap(donut, countryFeature)) {
+        } else if (booleanOverlap(countryFeature, donut)) {
           let insect = turf.intersect(donut, countryFeature);
-          negativeArea += turf.area(insect);
+          if (insect) {
+            negativeArea += turf.area(insect);
+          }
         }
 
-        let curBlock = Math.ceil(n / blockSize);
+        let curBlock = Math.ceil(totalShells + n / blockSize);
         if (curBlock !== block) {
           block = curBlock;
           blockDelta = performance.now() - startTime;
