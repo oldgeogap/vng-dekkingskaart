@@ -22,9 +22,13 @@ export function LocationCheckDownloadCSV(props: DownloadCSVProps) {
     const action = async (props: DownloadCSVProps) => {
       let output = makeCSV(props);
 
-      const blob = new Blob([output]);
-      const fileDownloadUrl = URL.createObjectURL(blob);
-      setUrl(fileDownloadUrl);
+      try {
+        const blob = new Blob([output]);
+        const fileDownloadUrl = URL.createObjectURL(blob);
+        setUrl(fileDownloadUrl);
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     action(props);
