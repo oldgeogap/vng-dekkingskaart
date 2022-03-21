@@ -5,6 +5,7 @@ import { useCoverageCountryPercent } from "renderer/hooks/useCoverageCountryPerc
 import { updateCoverageFile } from "renderer/db/mutations";
 import { styled } from "renderer/ui/theme";
 import { msToReadableTime } from "renderer/util";
+import { ErrorMessage } from "../error/ErrorMessage";
 
 export interface CoverageCalculateProps {
   file: CoverageFile;
@@ -12,7 +13,7 @@ export interface CoverageCalculateProps {
 }
 
 export function CoverageCalculate({ file, onDone }: CoverageCalculateProps) {
-  const { calculate, loading, coveragePercent, report } = useCoverageCountryPercent();
+  const { calculate, loading, coveragePercent, report, error } = useCoverageCountryPercent();
 
   React.useEffect(() => {
     calculate(file.path);
@@ -29,6 +30,11 @@ export function CoverageCalculate({ file, onDone }: CoverageCalculateProps) {
       action(coveragePercent);
     }
   }, [coveragePercent]);
+
+  console.log("ERROR", error);
+  if (error) {
+    return <ErrorMessage label="calculateCoveragePercent" message={error} />;
+  }
 
   return (
     <CorverageCalculateContainer>

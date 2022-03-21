@@ -130,7 +130,7 @@ export async function calculateCoverageCountryPercent({
       coveragePercent
     );
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 
   return { coveragePercent, coverageFilePath };

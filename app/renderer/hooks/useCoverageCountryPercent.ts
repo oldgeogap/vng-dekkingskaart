@@ -10,17 +10,22 @@ export interface UseCoverageCountryPercentResult {
   coveragePercent: number | null;
   report?: Report;
   loading: boolean;
+  error: null | string;
 }
 
 export function useCoverageCountryPercent(): UseCoverageCountryPercentResult {
   const [coverageFilePath, setCoverageFilePath] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
   const [result, setResult] = React.useState<number | null>(null);
   const [report, setReport] = React.useState<Report | null>(null);
   React.useEffect(() => {
     if (ipcRenderer) {
       const onResult = (event, resp) => {
+        console.log("TEST", resp.error, resp.message);
         if (resp.action === workerActions.COVERAGE_PERCENT_COUNTRY) {
-          if (resp.report) {
+          if (resp.error) {
+            setError(resp.message);
+          } else if (resp.report) {
             setReport(resp.report);
           } else if (resp.result) {
             let data = resp.result;
@@ -61,6 +66,7 @@ export function useCoverageCountryPercent(): UseCoverageCountryPercentResult {
     calculate,
     coveragePercent: result,
     loading: coverageFilePath !== null,
-    report
+    report,
+    error
   };
 }

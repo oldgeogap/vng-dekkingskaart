@@ -101,7 +101,8 @@ export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProp
           title: `Bestand Toegevoegd`,
           description: `Features: ${result.stats.features} Donuts: ${result.stats.donuts}`,
           status: "success",
-          duration: null
+          duration: null,
+          isClosable: true
         });
       }
       console.log("STATS", result.stats);
