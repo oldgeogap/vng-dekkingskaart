@@ -2,6 +2,7 @@ import { Heading, Spinner, Icon } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";
 import { VscCheck } from "react-icons/vsc";
+import { ErrorMessage } from "renderer/components/error/ErrorMessage";
 import { useApp } from "renderer/components/provider/AppProvider";
 import { CoverageFile, Municipality } from "renderer/db";
 import { useCoveragePercent } from "renderer/hooks/useCoveragePercent";
@@ -18,7 +19,7 @@ export function MiniCompetitionResultPrecalculate({
   coverageFiles
 }: MiniCompetitionResultPrecalculateProps) {
   const { providerName, coverageTypeName } = useApp();
-  const { entries, loading } = useCoveragePercent({
+  const { entries, loading, error } = useCoveragePercent({
     entries: coverageFiles.map((cf, index) => ({
       id: `${cf.id}`,
       municipalityIds: municipalities.map((m) => m.id),
@@ -29,6 +30,7 @@ export function MiniCompetitionResultPrecalculate({
   const getCovFile = (id: string) => {
     return coverageFiles.find((cf) => `${cf.id}` === id);
   };
+  console.log("ERROR", error);
 
   return (
     <>
@@ -53,9 +55,16 @@ export function MiniCompetitionResultPrecalculate({
           </PrecalculateContainer>
         )}
       </AnimatePresence>
-      {!loading && (
-        <MiniCompetitionResultRender municipalities={municipalities} coverageFiles={coverageFiles} entries={entries} />
-      )}
+      {!loading &&
+        (error ? (
+          <ErrorMessage label="Worker: useCoveragePercent" message={error} />
+        ) : (
+          <MiniCompetitionResultRender
+            municipalities={municipalities}
+            coverageFiles={coverageFiles}
+            entries={entries}
+          />
+        ))}
     </>
   );
 }

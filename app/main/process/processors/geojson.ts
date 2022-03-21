@@ -4,9 +4,9 @@ export async function processGeoJSON(path: string, targetFile: string) {
   var src = fs.readFileSync(path, "utf8");
 
   let geojson = JSON.parse(src);
-  await postProcessGeoJSON(targetFile, geojson);
+  let stats = await postProcessGeoJSON(targetFile, geojson);
 
-  return targetFile;
+  return { targetFile, stats };
 }
 
 export async function postProcessGeoJSON(targetFile: string, geojson: any) {
@@ -41,5 +41,8 @@ export async function postProcessGeoJSON(targetFile: string, geojson: any) {
   await fs.outputFile(targetFile, JSON.stringify(geojson, null, "  "));
   await fs.outputFile(targetFile.replace(".geojson", ".donuts.geojson"), JSON.stringify(negative, null, "  "));
 
-  return targetFile;
+  return {
+    features: geojson.features.length,
+    donuts: negative.features.length
+  };
 }

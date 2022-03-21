@@ -32,6 +32,7 @@ export interface UseCoveragePercentResult {
 
 export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const [result, setResult] = React.useState<CoveragePercentEntry[]>(
     entries.map((entry) => ({
       id: entry.id,
@@ -48,10 +49,10 @@ export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
     if (ipcRenderer) {
       const onResult = (event, resp) => {
         if (resp.error) {
-          console.error(resp.error);
-          throw Error(resp.error.message);
-        }
-        if (resp.result) {
+          console.log(resp.error, resp.message);
+          setError(resp.message);
+          setLoading(false);
+        } else if (resp.result) {
           let data = resp.result;
           setResult((old) => {
             let entry = old.find((entry) => entry.id === data.id);
@@ -98,6 +99,7 @@ export function useCoveragePercent({ entries }: UseCoveragePercentParams) {
 
   return {
     entries: result,
-    loading
+    loading,
+    error
   };
 }

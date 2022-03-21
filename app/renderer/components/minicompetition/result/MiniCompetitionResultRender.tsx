@@ -90,69 +90,70 @@ function getMapStates(coverageFiles: CoverageFile[], entries: CoveragePercentEnt
   let result: MapState[] = [];
   coverageFiles.forEach((cov, index) => {
     let entry = entries.find((o) => o.id === `${cov.id}`);
+    if (entry && entry.municipalityShapes && entry.coverageShapes) {
+      const workAreaGeoJSON: any = {
+        type: "FeatureCollection",
+        features: entry.municipalityShapes
+      };
 
-    const workAreaGeoJSON: any = {
-      type: "FeatureCollection",
-      features: entry.municipalityShapes
-    };
+      const coverageGeoJSON: any = {
+        type: "FeatureCollection",
+        features: entry.coverageShapes
+      };
 
-    const coverageGeoJSON: any = {
-      type: "FeatureCollection",
-      features: entry.coverageShapes
-    };
+      const b = bbox(workAreaGeoJSON);
 
-    const b = bbox(workAreaGeoJSON);
-
-    let mapState: MapState = {
-      id: `${cov.id}`,
-      style: "mapbox://styles/mapbox/streets-v9",
-      viewport: {
-        width: 800,
-        height: 600,
-        bounds: [
-          [b[0], b[1]],
-          [b[2], b[3]]
+      let mapState: MapState = {
+        id: `${cov.id}`,
+        style: "mapbox://styles/mapbox/streets-v9",
+        viewport: {
+          width: 800,
+          height: 600,
+          bounds: [
+            [b[0], b[1]],
+            [b[2], b[3]]
+          ],
+          boundsOptions: { padding: 52 }
+        },
+        sources: [
+          {
+            id: `source${index}workarea`,
+            source: {
+              type: "geojson",
+              data: workAreaGeoJSON
+            }
+          },
+          {
+            id: `source${index}coverage`,
+            source: {
+              type: "geojson",
+              data: coverageGeoJSON
+            }
+          }
         ],
-        boundsOptions: { padding: 52 }
-      },
-      sources: [
-        {
-          id: `source${index}workarea`,
-          source: {
-            type: "geojson",
-            data: workAreaGeoJSON
+        layers: [
+          {
+            id: `layer${index}workarea`,
+            type: "fill",
+            source: `source${index}workarea`,
+            paint: {
+              "fill-color": "#f200f2",
+              "fill-opacity": 0.5
+            }
+          },
+          {
+            id: `layer${index}coverage`,
+            source: `source${index}coverage`,
+            type: "fill",
+            paint: {
+              "fill-color": "#0000f2",
+              "fill-opacity": 0.5
+            }
           }
-        },
-        {
-          id: `source${index}coverage`,
-          source: {
-            type: "geojson",
-            data: coverageGeoJSON
-          }
-        }
-      ],
-      layers: [
-        {
-          id: `layer${index}workarea`,
-          type: "fill",
-          source: `source${index}workarea`,
-          paint: {
-            "fill-color": "#f200f2",
-            "fill-opacity": 0.5
-          }
-        },
-        {
-          id: `layer${index}coverage`,
-          source: `source${index}coverage`,
-          type: "fill",
-          paint: {
-            "fill-color": "#0000f2",
-            "fill-opacity": 0.5
-          }
-        }
-      ]
-    };
-    result.push(mapState);
+        ]
+      };
+      result.push(mapState);
+    }
   });
   return result;
 }

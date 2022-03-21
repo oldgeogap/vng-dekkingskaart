@@ -98,7 +98,7 @@ export async function calculateCoverageCountryPercent({
           }
         }
 
-        let curBlock = Math.ceil(totalShells + n / blockSize);
+        let curBlock = Math.ceil((totalShells + n) / blockSize);
         if (curBlock !== block) {
           block = curBlock;
           blockDelta = performance.now() - startTime;
@@ -117,6 +117,18 @@ export async function calculateCoverageCountryPercent({
 
     let area = coverageArea - negativeArea;
     coveragePercent = (area / countryArea) * 100;
+    console.log(
+      "Coverage area",
+      coverageArea,
+      "Negative area",
+      negativeArea,
+      "Country Area",
+      countryArea,
+      "Area",
+      area,
+      "Percent",
+      coveragePercent
+    );
   } catch (err) {
     console.error(err);
   }

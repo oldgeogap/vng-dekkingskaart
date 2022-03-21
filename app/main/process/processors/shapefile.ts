@@ -6,9 +6,9 @@ export async function processShapefile(path: string, targetFile: string) {
   const content = fs.readFileSync(path);
   let buf = Buffer.from(content);
   const converted = await shp(buf);
-  await postProcessGeoJSON(targetFile, converted);
+  let stats = await postProcessGeoJSON(targetFile, converted);
 
-  return targetFile;
+  return { targetFile, stats };
 }
 
 // function toArrayBuffer(buf) {

@@ -8,7 +8,7 @@ export async function processKML(path: string, targetFile: string) {
 
   var converted = togeojson.kml(kml);
 
-  await postProcessGeoJSON(targetFile, converted);
+  let stats = await postProcessGeoJSON(targetFile, converted);
 
-  return targetFile;
+  return { targetFile, stats };
 }

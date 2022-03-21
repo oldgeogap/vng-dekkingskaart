@@ -8,6 +8,7 @@ export type ProcessResult = {
   success: boolean;
   path: string | null;
   error?: string;
+  stats?: any;
 };
 
 export type ProcessAction = {

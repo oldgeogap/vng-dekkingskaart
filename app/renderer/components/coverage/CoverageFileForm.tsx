@@ -12,7 +12,8 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-  Select
+  Select,
+  useToast
 } from "@chakra-ui/react";
 import * as React from "react";
 
@@ -46,7 +47,7 @@ export interface CoverageFileFormProps {
 
 export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProps) {
   const isUpdate = file && typeof file !== "string";
-
+  const toast = useToast();
   const [startProcessing, setStartProcessing] = React.useState<ProcessAction | null>(null);
   const [paths, setPaths] = React.useState<string[] | null>(null);
   const providerOptions = useProviderOptions();
@@ -95,6 +96,15 @@ export function CoverageFileForm({ isOpen, onClose, file }: CoverageFileFormProp
         status: "done",
         path: result.path
       });
+      if (result.stats) {
+        toast({
+          title: `Bestand Toegevoegd`,
+          description: `Features: ${result.stats.features} Donuts: ${result.stats.donuts}`,
+          status: "success",
+          duration: null
+        });
+      }
+      console.log("STATS", result.stats);
       onClose();
     } else {
       console.error("Process error", result.error);

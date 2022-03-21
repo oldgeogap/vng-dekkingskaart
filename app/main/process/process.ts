@@ -30,11 +30,11 @@ ipcMain.on(ipcEvents.DELETE_FILE, async (event, arg) => {
 
 ipcMain.on(ipcEvents.PROCESS_FILES, async (event, arg) => {
   console.log(arg);
-  let result = "";
+
   const { paths, targetName } = arg;
   try {
-    result = await processFiles(paths, targetName);
-    event.sender.send(ipcEvents.PROCESS_FILES_RESULT, { success: true, path: result });
+    const { targetFile, stats } = await processFiles(paths, targetName);
+    event.sender.send(ipcEvents.PROCESS_FILES_RESULT, { success: true, path: targetFile, stats });
   } catch (err) {
     event.sender.send(ipcEvents.PROCESS_FILES_RESULT, { success: false, path: null, error: err.message });
   }
