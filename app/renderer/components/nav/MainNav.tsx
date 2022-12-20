@@ -78,6 +78,9 @@ export function MainNav({}: MainNavProps) {
         >
           Documentatie
         </a>
+        <Link href="/version">
+          <a>v{process.env.VERSION}</a>
+        </Link>
       </SideNav>
     </NavContainer>
   );
@@ -144,10 +147,12 @@ const SideNav = styled.aside`
   padding: 0 20px;
 
   a {
+    display: inline-block;
     text-transform: uppercase;
     font-weight: bold;
     font-size: 12px;
     color: ${(props) => props.theme.colors.bg[300]};
     cursor: pointer;
+    margin-left: 8px;
   }
 `;

@@ -5,6 +5,7 @@ import { calculateCoveragePercent } from "renderer/worker/coverage_percent";
 import { calculateCoveragePoint } from "renderer/worker/coverage_point";
 import { calculateRandomPoints } from "renderer/worker/random_points";
 import { calculateCoverageCountryPercent } from "renderer/worker/coverage_country_percent";
+import { calculateMunicipalityAreas } from "renderer/worker/municipality";
 const Worker = () => {
   // Send logs as messages to the main thread to show on the console
   const log = (value) => {
@@ -27,6 +28,9 @@ const Worker = () => {
                 break;
               case workerActions.RANDOM_POINTS:
                 result = await calculateRandomPoints(arg.payload);
+                break;
+              case workerActions.MUNICIPALITY_AREAS:
+                result = await calculateMunicipalityAreas();
                 break;
               case workerActions.COVERAGE_PERCENT_COUNTRY:
                 result = await calculateCoverageCountryPercent({

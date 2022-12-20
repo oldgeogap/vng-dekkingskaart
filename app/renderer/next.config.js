@@ -10,5 +10,13 @@ module.exports = withTM({
     }
 
     return config;
+  },
+  env: {
+    VERSION: getVersion()
   }
 });
+
+function getVersion() {
+  const { version } = require("../package.json");
+  return version;
+}
