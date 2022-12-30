@@ -14,10 +14,30 @@ function VersionPage() {
             VNG Dekkingskaarten <span>v{process.env.VERSION}</span>
           </VersionHeader>
           <p>Op basis van gemeentegrenzen 2022 van het CBS.</p>
+
+          <h3>De gemeentegrenzen in de app zijn als volgt tot stand gekomen:</h3>
+          <ol>
+            <li>
+              Gedownload van{" "}
+              <a
+                href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2022"
+                target="_blank"
+              >
+                CBS
+              </a>
+            </li>
+            <li>Unzip bestand</li>
+            <li>Voeg gemeente_2022_v1.shp toe aan QGIS</li>
+            <li>In QGIS gedissolved op GM_CODE en GM_NAAM</li>
+            <li>Multipart to Singlepart</li>
+            <li>Rename GM_CODE naar id, rename GN_NAAM naar naam</li>
+            <li>Save as Geojson, EPSG:4326</li>
+          </ol>
+
           <Bron>
             Bron:{" "}
             <a
-              href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen"
+              href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2022"
               target="_blank"
             >
               cbs.nl
@@ -48,14 +68,22 @@ const Container = styled.div`
   flex: 1;
   overflow: auto;
 
+  h3 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
   p {
     margin-bottom: 24px;
+  }
+
+  ol {
+    margin-left: 16px;
   }
 `;
 
 const Bron = styled.p`
   font-size: 12px;
-  margin-top: -18px;
+  margin-top: 8px;
 `;
 const VersionHeader = styled.h2`
   font-weight: bold;

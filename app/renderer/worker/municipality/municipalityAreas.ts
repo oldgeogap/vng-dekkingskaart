@@ -23,7 +23,7 @@ export async function calculateMunicipalityAreas(): Promise<MunicipalityAreasRes
 
     result.push({
       id: muni.properties.id,
-      name: muni.properties.naam,
+      name: muni.properties.name,
       area: muni.properties.area,
       area_calculated: area
     });
