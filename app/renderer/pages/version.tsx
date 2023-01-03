@@ -29,9 +29,10 @@ function VersionPage() {
             <li>Unzip bestand</li>
             <li>Voeg gemeente_2022_v1.shp toe aan QGIS</li>
             <li>In QGIS gedissolved op GM_CODE en GM_NAAM</li>
-            <li>Multipart to Singlepart</li>
-            <li>Rename GM_CODE naar id, rename GN_NAAM naar naam</li>
-            <li>Save as Geojson, EPSG:4326</li>
+            <li>Rename GM_CODE naar "id", rename GN_NAAM naar "name"</li>
+            <li>Sorteer het bestand op de kolom "name" met de tool "Order by expression"</li>
+            <li>Voeg een kolom toe "area" en bereken deze met Field Calculator ($area)</li>
+            <li>Save as Geojson, EPSG:4326 (Geometrie = MultiPolygon)</li>
           </ol>
 
           <Bron>
