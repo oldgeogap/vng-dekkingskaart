@@ -13,21 +13,21 @@ function VersionPage() {
           <VersionHeader>
             VNG Dekkingskaarten <span>v{process.env.VERSION}</span>
           </VersionHeader>
-          <p>Op basis van gemeentegrenzen 2022 van het CBS.</p>
+          <p>Op basis van gemeentegrenzen 2023 van het CBS.</p>
 
           <h3>De gemeentegrenzen in de app zijn als volgt tot stand gekomen:</h3>
           <ol>
             <li>
               Gedownload van{" "}
               <a
-                href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2022"
+                href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2023"
                 target="_blank"
               >
                 CBS
               </a>
             </li>
             <li>Unzip bestand</li>
-            <li>Voeg gemeente_2022_v1.shp toe aan QGIS</li>
+            <li>Voeg gemeente_2023_v1.shp toe aan QGIS</li>
             <li>In QGIS gedissolved op GM_CODE en GM_NAAM</li>
             <li>Rename GM_CODE naar "id", rename GN_NAAM naar "name"</li>
             <li>Sorteer het bestand op de kolom "name" met de tool "Order by expression"</li>
@@ -38,7 +38,7 @@ function VersionPage() {
           <Bron>
             Bron:{" "}
             <a
-              href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2022"
+              href="https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2023"
               target="_blank"
             >
               cbs.nl
