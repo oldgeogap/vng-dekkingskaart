@@ -2,11 +2,11 @@ import * as React from "react";
 import { parsePointString } from "renderer/util";
 
 function _getSuggestRequest(q: string) {
-  return `https://geodata.nationaalgeoregister.nl/locatieserver/v3/suggest?wt=json&q=${encodeURIComponent(q)}`;
+  return `https://api.pdok.nl/bzk/locatieserver/search/v3_1/suggest?wt=json&q=${encodeURIComponent(q)}`;
 }
 
 function _getLookupRequest(id: string) {
-  return `https://geodata.nationaalgeoregister.nl/locatieserver/v3/lookup?wt=json&id=${id}`;
+  return `https://api.pdok.nl/bzk/locatieserver/search/v3_1/lookup?wt=json&id=${id}`;
 }
 
 export type SuggestItem = {

@@ -27,7 +27,7 @@ export const mapStyles: MapStyle[] = [
   },
   {
     style: "/mapstyle/satellite/style.json",
-    label: "Sateliet"
+    label: "Satelliet"
   }
 ];
 

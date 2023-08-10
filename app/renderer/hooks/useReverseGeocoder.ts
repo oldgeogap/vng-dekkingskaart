@@ -3,7 +3,7 @@ import { LocationPoint } from "renderer/types";
 import { parsePointString } from "renderer/util";
 
 function _getLookupRequest(p: LocationPoint) {
-  return `http://geodata.nationaalgeoregister.nl/locatieserver/revgeo?lon=${p.x}&lat=${p.y}`;
+  return `https://api.pdok.nl/bzk/locatieserver/search/v3_1/reverse?lon=${p.x}&lat=${p.y}`;
 }
 
 export type ReverseGeocoderResult = {
