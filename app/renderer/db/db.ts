@@ -30,11 +30,14 @@ class VngDB extends Dexie {
     });
 
     this.on("ready", () => {
-      return this.municipality.count((count) => {
-        if (count === 0) {
-          return populateMunicipalities(this);
-        }
-      });
+      this.municipality.clear();
+      populateMunicipalities(this);
+
+      // return this.municipality.count((count) => {
+      //   if (count === 0) {
+      //     return populateMunicipalities(this);
+      //   }
+      // });
     });
   }
 }

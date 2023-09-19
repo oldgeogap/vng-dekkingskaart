@@ -19,6 +19,8 @@ export function MiniCompetitionResultPrecalculate({
   coverageFiles
 }: MiniCompetitionResultPrecalculateProps) {
   const { providerName, coverageTypeName } = useApp();
+
+  console.log("TEST", municipalities);
   const { entries, loading, error } = useCoveragePercent({
     entries: coverageFiles.map((cf, index) => ({
       id: `${cf.id}`,

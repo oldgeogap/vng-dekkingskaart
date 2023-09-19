@@ -26,14 +26,17 @@ export type CoveragePercentResult = {
   calcResult: CalcResult[];
 };
 
+let test = true;
+
 export async function calculateCoveragePercent({
   id,
   coverageFilePath,
   municipalityIds
 }: CoveragePercentArguments): Promise<CoveragePercentResult> {
   //result variables
-
+  console.log("A");
   let municipalityShapes = await getMunicipalityShapes(municipalityIds);
+  console.log("B");
   //logToFile(municipalityShapes, "muni", "geojson");
 
   //read input
@@ -41,6 +44,7 @@ export async function calculateCoveragePercent({
 
   let coverageShapes = [];
   let results: CalcResult[] = [];
+
   municipalityShapes.forEach((muni, n) => {
     let bbox = turf.bbox(muni);
     let bboxPolygon = turf.bboxPolygon(bbox);
@@ -78,7 +82,9 @@ export async function calculateCoveragePercent({
 
     let fc = turf.combine(turf.featureCollection(coverageFeatures.filter((cf) => cf !== null)));
     let coverageShape = fc.features[0] as Feature<MultiPolygon | Polygon>;
+
     coverageShape = turf.intersect(coverageShape, muni);
+
     coverageShapes.push(coverageShape);
 
     let coverageArea = turf.area(coverageShape);

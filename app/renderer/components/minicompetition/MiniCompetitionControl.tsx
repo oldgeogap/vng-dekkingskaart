@@ -15,7 +15,7 @@ export function MiniCompetitionControl({}: MiniCompetitionControlProps) {
     router.push(
       `/minicompetitie/result/${municipalitySelection.map((muni) => muni.id).join(",")}/${coverageSelection
         .map((cov) => cov.id)
-        .join(",")}}`
+        .join(",")}`
     );
   };
 

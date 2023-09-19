@@ -8,6 +8,7 @@ import { CoverageFileSort, CoverageFileSortKey, useFileList, CoverageFileFilters
 import { CoverageFileRow } from "./CoverageFileRow";
 import { useApp } from "../provider/AppProvider";
 import { Table, SortHeader } from "renderer/ui/table";
+import { db } from "renderer/db";
 
 import { CoverageFileFilterForm } from "./CoverageFileFilterForm";
 import { WorkerTest } from "renderer/worker/WorkerTest";
@@ -29,6 +30,15 @@ export function CoverageHome({}: CoverageHomeProps) {
   const onClose = () => {
     setTargetFile(null);
   };
+
+  React.useEffect(() => {
+    const action = async () => {
+      let result = await db.municipality.bulkGet(["GM1992"]);
+      console.log("RESULT", result);
+    };
+
+    action();
+  }, []);
 
   const isOpen = targetFile !== null;
 
