@@ -10,7 +10,7 @@ class VngDB extends Dexie {
   public appstate: Table<AppState>;
   public municipality: Table<Municipality>;
 
-  private static VERSION = 1;
+  private static VERSION = 2;
 
   constructor() {
     super("vngdb");

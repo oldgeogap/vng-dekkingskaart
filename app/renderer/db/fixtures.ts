@@ -3,7 +3,7 @@ import { Provider, CoverageType, AppState } from "./models";
 export const providerFixture: Provider[] = [
   { name: "KPN", color: "#009900" },
   { name: "Vodafone", color: "#E60000" },
-  { name: "T-Mobile", color: "#E10074" }
+  { name: "Odido", color: "#8D85FF" }
 ];
 
 export const coverageTypeFixture: CoverageType[] = [
